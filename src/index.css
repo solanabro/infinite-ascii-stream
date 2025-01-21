@@ -39,7 +39,7 @@
   body {
     @apply bg-background text-foreground font-mono;
     font-family: 'JetBrains Mono', monospace;
-    background: linear-gradient(to right, #243949 0%, #517fa4 100%);
+    background: radial-gradient(circle at center, rgb(13, 17, 28) 0%, rgb(2, 2, 4) 100%);
   }
 }
 
@@ -58,16 +58,16 @@
 }
 
 .glow {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .terminal-header {
-  background: rgba(13, 17, 23, 0.95);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(90deg, rgba(13, 17, 28, 0.8) 0%, rgba(2, 2, 4, 0.8) 100%);
+  box-shadow: 0 0 20px rgba(0, 0, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .terminal-header::before {
@@ -75,7 +75,7 @@
   position: absolute;
   inset: -1px;
   padding: 1px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -85,12 +85,12 @@
 }
 
 .terminal-body {
-  background: rgba(13, 17, 23, 0.95);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, rgba(13, 17, 28, 0.6) 0%, rgba(2, 2, 4, 0.8) 100%);
+  box-shadow: 0 0 30px rgba(0, 0, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .terminal-body::before {
@@ -98,7 +98,7 @@
   position: absolute;
   inset: -1px;
   padding: 1px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -108,11 +108,12 @@
 }
 
 .status-glow {
-  box-shadow: 0 0 15px currentColor;
+  box-shadow: 0 0 10px currentColor;
 }
 
+/* Custom scrollbar styles */
 .terminal-body::-webkit-scrollbar {
-  width: 8px;
+  width: 8px; /* This only affects vertical scrollbar */
 }
 
 .terminal-body::-webkit-scrollbar-track {
@@ -121,23 +122,10 @@
 }
 
 .terminal-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
 .terminal-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-pulse-slow {
-  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: rgba(255, 255, 255, 0.15);
 }

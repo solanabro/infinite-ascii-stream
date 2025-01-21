@@ -1,8 +1,7 @@
 const Logo = () => {
   return (
-    <div className="transform hover:scale-105 transition-transform duration-300">
-      <pre className="text-white font-mono text-[6px] xs:text-[8px] sm:text-sm whitespace-pre select-none glow overflow-x-scroll px-2 max-w-[95vw] -mx-2 sm:mx-0 scale-90 opacity-90 hover:opacity-100 transition-opacity duration-300">
-        {`
+    <pre className="text-white font-mono text-[6px] xs:text-[8px] sm:text-sm whitespace-pre select-none glow overflow-x-scroll px-2 max-w-[95vw] -mx-2 sm:mx-0 scale-90">
+      {`
 ░▒▓███████▓▒░  ░▒▓████████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓████████▓▒░ ░▒▓███████▓▒░   ░▒▓██████▓▒░  
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒▒▓█▓▒░  ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
@@ -10,8 +9,7 @@ const Logo = () => {
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░          ░▒▓█▓▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░          ░▒▓█▓▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓████████▓▒░    ░▒▓██▓▒░    ░▒▓████████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░`}
-      </pre>
-    </div>
+    </pre>
   );
 };
 
