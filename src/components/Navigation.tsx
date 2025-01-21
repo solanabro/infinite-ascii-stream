@@ -10,12 +10,16 @@ const Navigation = () => {
               NEVERA Terminal v2.5.7
             </div>
             <a
-              href="https://twitter.com"
+              href="https://x.com/agentnevera"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/80 hover:text-white transition-colors p-2 rounded-md hover:bg-white/5"
             >
-              <Twitter className="w-6 h-6" />
+              <img 
+                src="/lovable-uploads/30285e69-373b-414c-8a15-45365a552cff.png" 
+                alt="X (Twitter) Logo" 
+                className="w-6 h-6"
+              />
             </a>
           </div>
         </div>
