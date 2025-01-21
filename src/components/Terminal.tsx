@@ -49,17 +49,36 @@ const Terminal = () => {
     let typingInterval: NodeJS.Timeout;
     let currentIndex = 0;
     let tempCode = '';
+    let glitchCounter = 0;
+
+    const addGlitchEffect = (text: string) => {
+      const glitchChars = '!@#$%^&*<>[]{}|';
+      const shouldGlitch = Math.random() < 0.15; // 15% chance of glitch
+      
+      if (shouldGlitch) {
+        const glitchChar = glitchChars[Math.floor(Math.random() * glitchChars.length)];
+        return text + glitchChar;
+      }
+      return text;
+    };
 
     if (currentCode && !isTyping) {
       setIsTyping(true);
       typingInterval = setInterval(() => {
         if (currentIndex < currentCode.length) {
-          const randomDelay = Math.random() < 0.1;
+          const randomDelay = Math.random() < 0.2; // Increased chance of delay
           if (!randomDelay) {
+            glitchCounter++;
             tempCode += currentCode[currentIndex];
+            
+            // Apply glitch effect every few characters
+            const displayText = glitchCounter % 3 === 0 
+              ? addGlitchEffect(tempCode)
+              : tempCode;
+
             setDisplayedCode(prev => {
               const newArray = [...prev];
-              newArray[newArray.length - 1] = tempCode;
+              newArray[newArray.length - 1] = displayText;
               return newArray;
             });
             currentIndex++;
@@ -67,17 +86,15 @@ const Terminal = () => {
         } else {
           clearInterval(typingInterval);
           setIsTyping(false);
-          // Start new code block after current one is complete
-          setTimeout(() => {
-            setDisplayedCode(prev => [...prev, '']);
-            setCurrentCode(generateCode());
-          }, 1000);
+          // Immediately start new code block
+          setDisplayedCode(prev => [...prev, '']);
+          setCurrentCode(generateCode());
         }
-      }, 35); // Slower typing speed
-    }
+      }, 45); // Slightly slower typing speed
 
-    return () => clearInterval(typingInterval);
-  }, [currentCode]);
+      return () => clearInterval(typingInterval);
+    }
+  }, [currentCode, isTyping]);
 
   useEffect(() => {
     if (!currentCode && !isTyping) {
