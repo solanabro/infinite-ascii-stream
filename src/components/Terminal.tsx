@@ -5,7 +5,7 @@ const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [status, setStatus] = useState<'ACTIVE' | 'SCANNING' | 'PROCESSING' | 'ANALYZING'>('ACTIVE');
+  const status = 'ACTIVE'; // Changed to constant instead of state
 
   const statusColors = {
     ACTIVE: 'bg-green-500',
@@ -14,15 +14,7 @@ const Terminal = () => {
     ANALYZING: 'bg-purple-500'
   };
 
-  useEffect(() => {
-    const statusInterval = setInterval(() => {
-      const statuses: ('ACTIVE' | 'SCANNING' | 'PROCESSING' | 'ANALYZING')[] = ['ACTIVE', 'SCANNING', 'PROCESSING', 'ANALYZING'];
-      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-      setStatus(randomStatus);
-    }, 3000);
-
-    return () => clearInterval(statusInterval);
-  }, []);
+  // Removed the status change interval effect
 
   const generateCode = () => {
     const functions = [
@@ -142,7 +134,7 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="terminal-body h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto p-2 sm:p-4 border border-white/5 rounded-lg"
+        className="terminal-body h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg"
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
