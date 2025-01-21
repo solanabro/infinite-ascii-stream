@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { format } from 'date-fns';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [currentCode, setCurrentCode] = useState('');
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   const generateCode = () => {
     const functions = [
@@ -46,6 +48,14 @@ const Terminal = () => {
   };
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     let typingInterval: NodeJS.Timeout;
     let currentIndex = 0;
     let tempCode = '';
@@ -67,13 +77,12 @@ const Terminal = () => {
         } else {
           clearInterval(typingInterval);
           setIsTyping(false);
-          // Start new code block after current one is complete
           setTimeout(() => {
             setDisplayedCode(prev => [...prev, '']);
             setCurrentCode(generateCode());
           }, 1000);
         }
-      }, 35); // Slower typing speed
+      }, 35);
     }
 
     return () => clearInterval(typingInterval);
@@ -96,19 +105,24 @@ const Terminal = () => {
   }, [displayedCode]);
 
   return (
-    <div 
-      ref={terminalRef} 
-      className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
-      style={{ scrollBehavior: 'smooth' }}
-    >
-      {displayedCode.map((code, index) => (
-        <pre key={index} className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
-          {code}
-          {index === displayedCode.length - 1 && (
-            <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
-          )}
-        </pre>
-      ))}
+    <div className="relative">
+      <div className="absolute top-4 right-4 text-white/80 font-mono text-sm backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
+        {format(currentTime, 'HH:mm:ss')}
+      </div>
+      <div 
+        ref={terminalRef} 
+        className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
+        style={{ scrollBehavior: 'smooth' }}
+      >
+        {displayedCode.map((code, index) => (
+          <pre key={index} className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
+            {code}
+            {index === displayedCode.length - 1 && (
+              <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
+            )}
+          </pre>
+        ))}
+      </div>
     </div>
   );
 };
