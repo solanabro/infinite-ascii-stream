@@ -3,9 +3,7 @@ import { format } from 'date-fns';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
-  const [currentCode, setCurrentCode] = useState('');
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const generateCode = () => {
@@ -56,44 +54,52 @@ const Terminal = () => {
   }, []);
 
   useEffect(() => {
-    let typingInterval: NodeJS.Timeout;
     let currentIndex = 0;
     let tempCode = '';
+    const maxDisplayedLines = 100; // Maximum number of code blocks to show
 
-    if (currentCode && !isTyping) {
-      setIsTyping(true);
-      typingInterval = setInterval(() => {
+    const typingInterval = setInterval(() => {
+      const currentCode = generateCode();
+      
+      if (!currentCode) return;
+
+      tempCode = '';
+      currentIndex = 0;
+
+      const typeCharacter = () => {
         if (currentIndex < currentCode.length) {
           const randomDelay = Math.random() < 0.1;
           if (!randomDelay) {
             tempCode += currentCode[currentIndex];
             setDisplayedCode(prev => {
               const newArray = [...prev];
+              if (newArray.length >= maxDisplayedLines) {
+                newArray.shift(); // Remove oldest code block if we exceed max lines
+              }
               newArray[newArray.length - 1] = tempCode;
               return newArray;
             });
             currentIndex++;
+            setTimeout(typeCharacter, 35);
+          } else {
+            setTimeout(typeCharacter, 100);
           }
         } else {
-          clearInterval(typingInterval);
-          setIsTyping(false);
-          setTimeout(() => {
-            setDisplayedCode(prev => [...prev, '']);
-            setCurrentCode(generateCode());
-          }, 1000);
+          setDisplayedCode(prev => {
+            const newArray = [...prev, '']; // Add new empty line for next code block
+            if (newArray.length > maxDisplayedLines) {
+              newArray.shift();
+            }
+            return newArray;
+          });
         }
-      }, 35);
-    }
+      };
+
+      typeCharacter();
+    }, 4000); // Generate new code block every 4 seconds
 
     return () => clearInterval(typingInterval);
-  }, [currentCode]);
-
-  useEffect(() => {
-    if (!currentCode && !isTyping) {
-      setDisplayedCode(['']);
-      setCurrentCode(generateCode());
-    }
-  }, [currentCode, isTyping]);
+  }, []);
 
   useEffect(() => {
     if (terminalRef.current) {
