@@ -5,6 +5,24 @@ const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [status, setStatus] = useState<'ACTIVE' | 'SCANNING' | 'PROCESSING' | 'ANALYZING'>('ACTIVE');
+
+  const statusColors = {
+    ACTIVE: 'bg-green-500',
+    SCANNING: 'bg-blue-500',
+    PROCESSING: 'bg-yellow-500',
+    ANALYZING: 'bg-purple-500'
+  };
+
+  useEffect(() => {
+    const statusInterval = setInterval(() => {
+      const statuses: ('ACTIVE' | 'SCANNING' | 'PROCESSING' | 'ANALYZING')[] = ['ACTIVE', 'SCANNING', 'PROCESSING', 'ANALYZING'];
+      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+      setStatus(randomStatus);
+    }, 3000);
+
+    return () => clearInterval(statusInterval);
+  }, []);
 
   const generateCode = () => {
     const functions = [
@@ -56,7 +74,7 @@ const Terminal = () => {
   useEffect(() => {
     let currentIndex = 0;
     let tempCode = '';
-    const maxDisplayedLines = 100; // Maximum number of code blocks to show
+    const maxDisplayedLines = 100;
 
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
@@ -74,7 +92,7 @@ const Terminal = () => {
             setDisplayedCode(prev => {
               const newArray = [...prev];
               if (newArray.length >= maxDisplayedLines) {
-                newArray.shift(); // Remove oldest code block if we exceed max lines
+                newArray.shift();
               }
               newArray[newArray.length - 1] = tempCode;
               return newArray;
@@ -86,7 +104,7 @@ const Terminal = () => {
           }
         } else {
           setDisplayedCode(prev => {
-            const newArray = [...prev, '']; // Add new empty line for next code block
+            const newArray = [...prev, ''];
             if (newArray.length > maxDisplayedLines) {
               newArray.shift();
             }
@@ -96,7 +114,7 @@ const Terminal = () => {
       };
 
       typeCharacter();
-    }, 4000); // Generate new code block every 4 seconds
+    }, 4000);
 
     return () => clearInterval(typingInterval);
   }, []);
@@ -111,7 +129,17 @@ const Terminal = () => {
   }, [displayedCode]);
 
   return (
-    <div className="relative">
+    <div className="relative space-y-4">
+      <div className="bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className={`h-3 w-3 rounded-full ${statusColors[status]} animate-pulse`}></div>
+          <span className="text-white/80 font-mono text-sm">STATUS: {status}</span>
+        </div>
+        <div className="text-white/80 font-mono text-sm">
+          {format(currentTime, 'HH:mm:ss')}
+        </div>
+      </div>
+      
       <div 
         ref={terminalRef} 
         className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
@@ -125,9 +153,6 @@ const Terminal = () => {
             )}
           </pre>
         ))}
-      </div>
-      <div className="absolute bottom-4 right-4 text-white/80 font-mono text-sm backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
-        {format(currentTime, 'HH:mm:ss')}
       </div>
     </div>
   );
