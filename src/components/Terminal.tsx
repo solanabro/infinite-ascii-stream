@@ -14,8 +14,6 @@ const Terminal = () => {
     ANALYZING: 'bg-purple-500'
   };
 
-  // Removed the status change interval effect
-
   const generateCode = () => {
     const functions = [
       `function initializeNevera() {
@@ -121,20 +119,20 @@ const Terminal = () => {
   }, [displayedCode]);
 
   return (
-    <div className="relative space-y-2 sm:space-y-4 mb-8">
-      <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
-          <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: {status}</span>
+    <div className="relative space-y-3 sm:space-y-5 mb-8">
+      <div className="terminal-header p-4 sm:p-6 border border-white/10 rounded-xl flex items-center justify-between backdrop-blur-xl">
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <div className={`h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
+          <span className="text-white/90 font-mono text-sm sm:text-base tracking-wide glow">STATUS: {status}</span>
         </div>
-        <div className="text-white/80 font-mono text-xs sm:text-sm glow">
+        <div className="text-white/90 font-mono text-sm sm:text-base tracking-wide glow">
           {format(currentTime, 'HH:mm:ss')}
         </div>
       </div>
       
       <div 
         ref={terminalRef} 
-        className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
+        className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto p-4 sm:p-6 border border-white/10 rounded-xl backdrop-blur-xl"
         style={{ scrollBehavior: 'smooth', msOverflowStyle: 'none', scrollbarWidth: 'none' }}
       >
         <style>
@@ -145,10 +143,10 @@ const Terminal = () => {
           `}
         </style>
         {displayedCode.map((code, index) => (
-          <pre key={index} className="text-white/90 text-xs sm:text-sm font-mono mb-2 sm:mb-4 whitespace-pre hover:text-white/100 transition-colors">
+          <pre key={index} className="text-white/95 text-xs sm:text-sm font-mono mb-3 sm:mb-5 whitespace-pre hover:text-white transition-colors duration-200">
             {code}
             {index === displayedCode.length - 1 && (
-              <span className="animate-pulse inline-block w-1.5 sm:w-2 h-3 sm:h-4 bg-white/90 ml-1 glow">_</span>
+              <span className="animate-pulse inline-block w-2 sm:w-2.5 h-4 sm:h-5 bg-white/90 ml-1 glow">_</span>
             )}
           </pre>
         ))}
