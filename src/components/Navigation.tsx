@@ -7,7 +7,7 @@ const Navigation = () => {
         <div className="terminal-header rounded-lg py-2 md:py-3 px-4 md:px-6">
           <div className="flex justify-between items-center">
             <div className="text-white/80 text-sm md:text-base font-medium hover:text-white transition-colors glow">
-              2.5.7
+              version 2.5.7
             </div>
             <a
               href="https://x.com/agentnevera"
