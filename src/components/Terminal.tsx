@@ -112,7 +112,7 @@ const Terminal = () => {
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
-          <pre key={index} className="text-white/80 text-[0.6rem] sm:text-xs md:text-sm font-mono mb-4 whitespace-pre-wrap break-words">
+          <pre key={index} className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
             {code}
             {index === displayedCode.length - 1 && (
               <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
@@ -120,7 +120,7 @@ const Terminal = () => {
           </pre>
         ))}
       </div>
-      <div className="absolute bottom-4 right-4 text-white/80 font-mono text-xs sm:text-sm backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
+      <div className="absolute bottom-4 right-4 text-white/80 font-mono text-sm backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
         {format(currentTime, 'HH:mm:ss')}
       </div>
     </div>
