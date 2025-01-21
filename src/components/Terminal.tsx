@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [currentCode, setCurrentCode] = useState('');
-  const [displayedCode, setDisplayedCode] = useState('');
+  const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
   const generateCode = () => {
@@ -48,23 +48,28 @@ const Terminal = () => {
   useEffect(() => {
     let typingInterval: NodeJS.Timeout;
     let currentIndex = 0;
+    let tempCode = '';
 
     if (currentCode && !isTyping) {
       setIsTyping(true);
       typingInterval = setInterval(() => {
         if (currentIndex < currentCode.length) {
-          // Random typing speed variation for more interesting effect
           const randomDelay = Math.random() < 0.1;
           if (!randomDelay) {
-            setDisplayedCode(prev => prev + currentCode[currentIndex]);
+            tempCode += currentCode[currentIndex];
+            setDisplayedCode(prev => {
+              const newArray = [...prev];
+              newArray[newArray.length - 1] = tempCode;
+              return newArray;
+            });
             currentIndex++;
           }
         } else {
           clearInterval(typingInterval);
           setIsTyping(false);
-          // Clear the displayed code after a short delay
+          // Start new code block after current one is complete
           setTimeout(() => {
-            setDisplayedCode('');
+            setDisplayedCode(prev => [...prev, '']);
             setCurrentCode(generateCode());
           }, 1000);
         }
@@ -76,6 +81,7 @@ const Terminal = () => {
 
   useEffect(() => {
     if (!currentCode && !isTyping) {
+      setDisplayedCode(['']);
       setCurrentCode(generateCode());
     }
   }, [currentCode, isTyping]);
@@ -95,10 +101,14 @@ const Terminal = () => {
       className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
       style={{ scrollBehavior: 'smooth' }}
     >
-      <pre className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
-        {displayedCode}
-        <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
-      </pre>
+      {displayedCode.map((code, index) => (
+        <pre key={index} className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
+          {code}
+          {index === displayedCode.length - 1 && (
+            <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
+          )}
+        </pre>
+      ))}
     </div>
   );
 };
