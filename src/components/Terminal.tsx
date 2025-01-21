@@ -129,7 +129,7 @@ const Terminal = () => {
   }, [displayedCode]);
 
   return (
-    <div className="relative space-y-2 sm:space-y-4 mb-16 sm:mb-20">
+    <div className="relative space-y-2 sm:space-y-4 mb-24 sm:mb-28">
       <div className="bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-3">
           <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse`}></div>
@@ -142,7 +142,7 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
+        className="h-[calc(100vh-26rem)] sm:h-[calc(100vh-28rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
