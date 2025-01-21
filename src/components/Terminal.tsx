@@ -129,27 +129,27 @@ const Terminal = () => {
   }, [displayedCode]);
 
   return (
-    <div className="relative space-y-2 sm:space-y-4 mb-16 sm:mb-20">
-      <div className="bg-black/30 backdrop-blur-md p-2 sm:p-4 border border-white/10 rounded-lg flex items-center justify-between">
+    <div className="relative space-y-2 sm:space-y-4 mb-8">
+      <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse`}></div>
-          <span className="text-white/60 font-mono text-xs sm:text-sm">STATUS: {status}</span>
+          <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
+          <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: {status}</span>
         </div>
-        <div className="text-white/60 font-mono text-xs sm:text-sm">
+        <div className="text-white/80 font-mono text-xs sm:text-sm glow">
           {format(currentTime, 'HH:mm:ss')}
         </div>
       </div>
       
       <div 
         ref={terminalRef} 
-        className="h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto bg-black/30 backdrop-blur-md p-2 sm:p-4 border border-white/10 rounded-lg"
+        className="terminal-body h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto p-2 sm:p-4 border border-white/5 rounded-lg"
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
-          <pre key={index} className="text-white/70 text-xs sm:text-sm font-mono mb-2 sm:mb-4 whitespace-pre">
+          <pre key={index} className="text-white/90 text-xs sm:text-sm font-mono mb-2 sm:mb-4 whitespace-pre hover:text-white/100 transition-colors">
             {code}
             {index === displayedCode.length - 1 && (
-              <span className="animate-pulse inline-block w-1.5 sm:w-2 h-3 sm:h-4 bg-white/60 ml-1">_</span>
+              <span className="animate-pulse inline-block w-1.5 sm:w-2 h-3 sm:h-4 bg-white/90 ml-1 glow">_</span>
             )}
           </pre>
         ))}
