@@ -127,7 +127,7 @@ const Terminal = () => {
       });
     }
   }, [displayedCode]);
-      
+
   return (
     <div className="relative space-y-2 sm:space-y-4 mb-16 sm:mb-20">
       <div className="bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg flex items-center justify-between">
@@ -142,7 +142,7 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="h-[calc(100vh-20rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
+        className="h-[calc(100vh-20rem)] sm:h-[calc(100vh-22rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
