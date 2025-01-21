@@ -66,7 +66,7 @@ const Terminal = () => {
   useEffect(() => {
     let currentIndex = 0;
     let tempCode = '';
-    const maxDisplayedLines = 50; // Reduced from 100 to show less lines
+    const maxDisplayedLines = 50;
 
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
@@ -134,9 +134,16 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="terminal-body h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg"
-        style={{ scrollBehavior: 'smooth' }}
+        className="terminal-body h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
+        style={{ scrollBehavior: 'smooth', msOverflowStyle: 'none', scrollbarWidth: 'none' }}
       >
+        <style>
+          {`
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}
+        </style>
         {displayedCode.map((code, index) => (
           <pre key={index} className="text-white/90 text-xs sm:text-sm font-mono mb-2 sm:mb-4 whitespace-pre hover:text-white/100 transition-colors">
             {code}
