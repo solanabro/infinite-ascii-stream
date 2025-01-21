@@ -7,7 +7,7 @@ const Navigation = () => {
         <div className="terminal-header rounded-lg py-3 px-6">
           <div className="flex justify-between items-center">
             <div className="text-white/80 text-base font-medium hover:text-white transition-colors glow">
-              NEVERA Terminal v1.0.0
+              NEVERA Terminal v2.5.7
             </div>
             <a
               href="https://twitter.com"
