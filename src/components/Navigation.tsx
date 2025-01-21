@@ -9,9 +9,9 @@ const Navigation = () => {
           href="https://twitter.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white/60 hover:text-blue-400 transition-all duration-300 transform hover:scale-110"
+          className="text-white/60 hover:text-white transition-colors"
         >
-          <Twitter className="w-5 h-5 stroke-[1.5]" />
+          <Twitter className="w-5 h-5" />
         </a>
       </div>
     </nav>
