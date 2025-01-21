@@ -1,6 +1,6 @@
 const Logo = () => {
   return (
-    <pre className="text-white font-mono text-xs sm:text-sm whitespace-pre select-none glow overflow-x-auto">
+    <pre className="text-white font-mono text-[8px] xs:text-xs sm:text-sm whitespace-pre select-none glow overflow-x-auto">
       {`
 ░▒▓███████▓▒░  ░▒▓████████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓████████▓▒░ ░▒▓███████▓▒░   ░▒▓██████▓▒░  
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
