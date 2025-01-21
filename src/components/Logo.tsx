@@ -11,7 +11,7 @@ const Logo = () => {
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░          ░▒▓█▓▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
 ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓████████▓▒░    ░▒▓██▓▒░    ░▒▓████████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░░▒▓█▓▒░`}
       </pre>
-      <div className="absolute bottom-0 right-0 text-white/60 text-sm">v2.1.4</div>
+      <div className="absolute bottom-0 left-0 text-white/60 text-sm">v2.1.4</div>
     </div>
   );
 };
