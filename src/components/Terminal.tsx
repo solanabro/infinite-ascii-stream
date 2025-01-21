@@ -142,7 +142,7 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
+        className="h-[calc(100vh-22rem)] sm:h-[calc(100vh-24rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
