@@ -67,6 +67,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .terminal-header::before {
@@ -89,6 +90,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .terminal-body::before {
@@ -111,7 +113,7 @@
 
 /* Custom scrollbar styles */
 .terminal-body::-webkit-scrollbar {
-  width: 8px;
+  width: 8px; /* This only affects vertical scrollbar */
 }
 
 .terminal-body::-webkit-scrollbar-track {
