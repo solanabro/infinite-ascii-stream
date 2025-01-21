@@ -53,13 +53,17 @@ const Terminal = () => {
       setIsTyping(true);
       typingInterval = setInterval(() => {
         if (currentIndex < currentCode.length) {
-          setDisplayedCode(prev => prev + currentCode[currentIndex]);
-          currentIndex++;
+          // Random typing speed variation for more interesting effect
+          const randomDelay = Math.random() < 0.1;
+          if (!randomDelay) {
+            setDisplayedCode(prev => prev + currentCode[currentIndex]);
+            currentIndex++;
+          }
         } else {
           clearInterval(typingInterval);
           setIsTyping(false);
         }
-      }, 20); // Adjust typing speed here
+      }, 35); // Slower typing speed
     }
 
     return () => clearInterval(typingInterval);
@@ -70,29 +74,33 @@ const Terminal = () => {
       if (!isTyping) {
         if (terminalRef.current) {
           const newCode = document.createElement('pre');
-          newCode.className = 'text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre opacity-0 transition-opacity duration-500';
+          newCode.className = 'text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre opacity-0 transition-all duration-500';
           newCode.textContent = displayedCode;
           terminalRef.current.appendChild(newCode);
           
-          // Trigger fade in
+          // Trigger fade in with slight slide effect
           setTimeout(() => {
             newCode.classList.remove('opacity-0');
+            newCode.style.transform = 'translateY(0)';
           }, 50);
 
-          // Auto-scroll to bottom
-          terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+          // Auto-scroll to bottom with smooth behavior
+          terminalRef.current.scrollTo({
+            top: terminalRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
 
           // Remove old code if too many lines
-          if (terminalRef.current.children.length > 20) {
+          while (terminalRef.current.children.length > 50) {
             terminalRef.current.removeChild(terminalRef.current.children[0]);
           }
 
-          // Generate new code
+          // Generate new code immediately after finishing
           setDisplayedCode('');
           setCurrentCode(generateCode());
         }
       }
-    }, 4000); // Adjust interval between code blocks
+    }, 3000); // Shorter interval between code blocks for continuous flow
 
     return () => clearInterval(codeInterval);
   }, [isTyping, displayedCode]);
@@ -101,11 +109,12 @@ const Terminal = () => {
     <div 
       ref={terminalRef} 
       className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
+      style={{ scrollBehavior: 'smooth' }}
     >
       {displayedCode && (
         <pre className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
           {displayedCode}
-          <span className="animate-pulse">_</span>
+          <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
         </pre>
       )}
     </div>
