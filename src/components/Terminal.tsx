@@ -5,7 +5,7 @@ const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const status = 'ACTIVE'; // Changed to constant instead of state
+  const status = 'ACTIVE';
 
   const statusColors = {
     ACTIVE: 'bg-green-500',
@@ -134,7 +134,7 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="terminal-body h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
+        className="terminal-body h-[calc(100vh-22rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
         style={{ scrollBehavior: 'smooth', msOverflowStyle: 'none', scrollbarWidth: 'none' }}
       >
         <style>
