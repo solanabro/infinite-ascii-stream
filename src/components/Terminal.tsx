@@ -106,9 +106,6 @@ const Terminal = () => {
 
   return (
     <div className="relative">
-      <div className="absolute top-4 right-4 text-white/80 font-mono text-sm backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
-        {format(currentTime, 'HH:mm:ss')}
-      </div>
       <div 
         ref={terminalRef} 
         className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
@@ -122,6 +119,9 @@ const Terminal = () => {
             )}
           </pre>
         ))}
+      </div>
+      <div className="absolute bottom-4 right-4 text-white/80 font-mono text-sm backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
+        {format(currentTime, 'HH:mm:ss')}
       </div>
     </div>
   );
