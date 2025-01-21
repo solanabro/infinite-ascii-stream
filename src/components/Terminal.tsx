@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
-  const [displayedCode, setDisplayedCode] = useState<string[]>([]);
+  const [displayedCode, setDisplayedCode] = useState<string[]>(['']); // Initialize with empty string to start typing
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const generateCode = () => {
@@ -54,49 +54,55 @@ const Terminal = () => {
   }, []);
 
   useEffect(() => {
+    // Start with initial code generation
+    const initialCode = generateCode();
     let currentIndex = 0;
     let tempCode = '';
-    const maxDisplayedLines = 100; // Maximum number of code blocks to show
+    const maxDisplayedLines = 100;
 
+    // Function to type out characters
+    const typeCharacter = () => {
+      if (currentIndex < initialCode.length) {
+        const randomDelay = Math.random() < 0.1;
+        if (!randomDelay) {
+          tempCode += initialCode[currentIndex];
+          setDisplayedCode(prev => {
+            const newArray = [...prev];
+            if (newArray.length >= maxDisplayedLines) {
+              newArray.shift();
+            }
+            newArray[newArray.length - 1] = tempCode;
+            return newArray;
+          });
+          currentIndex++;
+          setTimeout(typeCharacter, 35);
+        } else {
+          setTimeout(typeCharacter, 100);
+        }
+      } else {
+        setDisplayedCode(prev => {
+          const newArray = [...prev, '']; 
+          if (newArray.length > maxDisplayedLines) {
+            newArray.shift();
+          }
+          return newArray;
+        });
+      }
+    };
+
+    // Start typing immediately
+    typeCharacter();
+
+    // Set up interval for continuous code generation
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
-      
       if (!currentCode) return;
 
       tempCode = '';
       currentIndex = 0;
 
-      const typeCharacter = () => {
-        if (currentIndex < currentCode.length) {
-          const randomDelay = Math.random() < 0.1;
-          if (!randomDelay) {
-            tempCode += currentCode[currentIndex];
-            setDisplayedCode(prev => {
-              const newArray = [...prev];
-              if (newArray.length >= maxDisplayedLines) {
-                newArray.shift(); // Remove oldest code block if we exceed max lines
-              }
-              newArray[newArray.length - 1] = tempCode;
-              return newArray;
-            });
-            currentIndex++;
-            setTimeout(typeCharacter, 35);
-          } else {
-            setTimeout(typeCharacter, 100);
-          }
-        } else {
-          setDisplayedCode(prev => {
-            const newArray = [...prev, '']; // Add new empty line for next code block
-            if (newArray.length > maxDisplayedLines) {
-              newArray.shift();
-            }
-            return newArray;
-          });
-        }
-      };
-
       typeCharacter();
-    }, 4000); // Generate new code block every 4 seconds
+    }, 4000);
 
     return () => clearInterval(typingInterval);
   }, []);
