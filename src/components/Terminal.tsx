@@ -74,7 +74,7 @@ const Terminal = () => {
   useEffect(() => {
     let currentIndex = 0;
     let tempCode = '';
-    const maxDisplayedLines = 100;
+    const maxDisplayedLines = 50; // Reduced from 100 to show less lines
 
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
@@ -142,7 +142,7 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="h-[calc(100vh-12rem)] sm:h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
+        className="h-[calc(100vh-24rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-2 sm:p-4 border border-white/20 rounded-lg"
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
