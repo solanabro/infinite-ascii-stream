@@ -1,7 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
+  const [currentCode, setCurrentCode] = useState('');
+  const [displayedCode, setDisplayedCode] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
   const generateCode = () => {
     const functions = [
@@ -43,31 +46,68 @@ const Terminal = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (terminalRef.current) {
-        const newCode = document.createElement('pre');
-        newCode.className = 'text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre';
-        newCode.textContent = generateCode();
-        terminalRef.current.appendChild(newCode);
+    let typingInterval: NodeJS.Timeout;
+    let currentIndex = 0;
 
-        // Auto-scroll to bottom
-        terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    if (currentCode && !isTyping) {
+      setIsTyping(true);
+      typingInterval = setInterval(() => {
+        if (currentIndex < currentCode.length) {
+          setDisplayedCode(prev => prev + currentCode[currentIndex]);
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setIsTyping(false);
+        }
+      }, 20); // Adjust typing speed here
+    }
 
-        // Remove old code if too many lines
-        if (terminalRef.current.children.length > 20) {
-          terminalRef.current.removeChild(terminalRef.current.children[0]);
+    return () => clearInterval(typingInterval);
+  }, [currentCode]);
+
+  useEffect(() => {
+    const codeInterval = setInterval(() => {
+      if (!isTyping) {
+        if (terminalRef.current) {
+          const newCode = document.createElement('pre');
+          newCode.className = 'text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre opacity-0 transition-opacity duration-500';
+          newCode.textContent = displayedCode;
+          terminalRef.current.appendChild(newCode);
+          
+          // Trigger fade in
+          setTimeout(() => {
+            newCode.classList.remove('opacity-0');
+          }, 50);
+
+          // Auto-scroll to bottom
+          terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+
+          // Remove old code if too many lines
+          if (terminalRef.current.children.length > 20) {
+            terminalRef.current.removeChild(terminalRef.current.children[0]);
+          }
+
+          // Generate new code
+          setDisplayedCode('');
+          setCurrentCode(generateCode());
         }
       }
-    }, 2000);
+    }, 4000); // Adjust interval between code blocks
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(codeInterval);
+  }, [isTyping, displayedCode]);
 
   return (
     <div 
       ref={terminalRef} 
       className="h-[calc(100vh-16rem)] overflow-y-auto bg-black/50 backdrop-blur-sm p-4 border border-white/20 rounded-lg"
     >
+      {displayedCode && (
+        <pre className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
+          {displayedCode}
+          <span className="animate-pulse">_</span>
+        </pre>
+      )}
     </div>
   );
 };
