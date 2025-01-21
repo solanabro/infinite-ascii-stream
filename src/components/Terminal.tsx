@@ -1,110 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { format } from 'date-fns';
+import React, { useRef, useState, useEffect } from 'react';
+import { useCodeGeneration } from './terminal/CodeGenerator';
+import { TimeDisplay } from './terminal/TimeDisplay';
+import { CodeDisplay } from './terminal/CodeDisplay';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
-  const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [status, setStatus] = useState('ACTIVE');
-
-  const generateCode = () => {
-    const functions = [
-      `function initializeNevera() {
-    console.log("[ SYSTEM BOOT: NEVERA ONLINE ]");
-    const Nevera = {
-        status: "ACTIVE",
-        mission: "STREAMLINING MARKET INTELLIGENCE",
-        modules: ["Trend Analysis", "Sentiment Detection"]
-    };
-    console.log(":: SYSTEM CONFIGURATION ::");
-    engageTracking(Nevera);
-}`,
-      `function processMarketShifts(data) {
-    console.log(":: MARKET SHIFT ANALYSIS ::");
-    if (data.whalesActive || data.hypeLaunchDetected) {
-        console.log("> ALERT: Unusual activity detected.");
-        return true;
-    }
-    return false;
-}`,
-      `function generateInsights() {
-    console.log(":: INSIGHT GENERATION ::");
-    console.log("> Monitoring whale movements...");
-    return {
-        whalesActive: true,
-        hypeLaunchDetected: true,
-        sentimentShift: "positive"
-    };
-}`,
-      `function finalizeMission(agent, alertStatus) {
-    console.log(":: FINALIZING MISSION ::");
-    console.log("> Nevera identity: ", agent.identity);
-    console.log("[ TRANSMISSION COMPLETE: NEVERA EVOLVES ]");
-}`
-    ];
-
-    return functions[Math.floor(Math.random() * functions.length)];
-  };
+  const displayedCode = useCodeGeneration();
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-      // Randomly update status occasionally
-      if (Math.random() < 0.1) {
-        const statuses = ['ACTIVE', 'SCANNING', 'PROCESSING', 'ANALYZING'];
-        setStatus(statuses[Math.floor(Math.random() * statuses.length)]);
-      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    let currentIndex = 0;
-    let tempCode = '';
-    const maxDisplayedLines = 100;
-
-    const typingInterval = setInterval(() => {
-      const currentCode = generateCode();
-      
-      if (!currentCode) return;
-
-      tempCode = '';
-      currentIndex = 0;
-
-      const typeCharacter = () => {
-        if (currentIndex < currentCode.length) {
-          const randomDelay = Math.random() < 0.1;
-          if (!randomDelay) {
-            tempCode += currentCode[currentIndex];
-            setDisplayedCode(prev => {
-              const newArray = [...prev];
-              if (newArray.length >= maxDisplayedLines) {
-                newArray.shift();
-              }
-              newArray[newArray.length - 1] = tempCode;
-              return newArray;
-            });
-            currentIndex++;
-            setTimeout(typeCharacter, 35);
-          } else {
-            setTimeout(typeCharacter, 100);
-          }
-        } else {
-          setDisplayedCode(prev => {
-            const newArray = [...prev, ''];
-            if (newArray.length > maxDisplayedLines) {
-              newArray.shift();
-            }
-            return newArray;
-          });
-        }
-      };
-
-      typeCharacter();
-    }, 4000);
-
-    return () => clearInterval(typingInterval);
   }, []);
 
   useEffect(() => {
@@ -124,28 +33,14 @@ const Terminal = () => {
         style={{ scrollBehavior: 'smooth' }}
       >
         {displayedCode.map((code, index) => (
-          <pre key={index} className="text-white/80 text-xs sm:text-sm font-mono mb-4 whitespace-pre">
-            {code}
-            {index === displayedCode.length - 1 && (
-              <span className="animate-pulse inline-block w-2 h-4 bg-white/80 ml-1">_</span>
-            )}
-          </pre>
+          <CodeDisplay 
+            key={index} 
+            code={code} 
+            isLast={index === displayedCode.length - 1} 
+          />
         ))}
       </div>
-      <div className="absolute bottom-4 right-4 flex gap-4 text-white/80 font-mono text-sm">
-        <div className="backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md flex items-center gap-2">
-          <span className={`inline-block w-2 h-2 rounded-full ${
-            status === 'ACTIVE' ? 'bg-green-500' :
-            status === 'SCANNING' ? 'bg-blue-500' :
-            status === 'PROCESSING' ? 'bg-yellow-500' :
-            'bg-purple-500'
-          } animate-pulse`}></span>
-          {status}
-        </div>
-        <div className="backdrop-blur-sm bg-black/30 px-3 py-1 rounded-md">
-          {format(currentTime, 'HH:mm:ss')}
-        </div>
-      </div>
+      <TimeDisplay currentTime={currentTime} />
     </div>
   );
 };
