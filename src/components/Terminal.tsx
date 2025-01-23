@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
-  const [displayedCode, setDisplayedCode] = useState<string[]>([]);
+  const [displayedCode, setDisplayedCode] = useState<string[]>(['']);
   const [currentTime, setCurrentTime] = useState(new Date());
   const status = 'ACTIVE';
 
@@ -13,8 +13,6 @@ const Terminal = () => {
     PROCESSING: 'bg-yellow-500',
     ANALYZING: 'bg-purple-500'
   };
-
-  // Removed the status change interval effect
 
   const generateCode = () => {
     const functions = [
@@ -68,48 +66,51 @@ const Terminal = () => {
     let tempCode = '';
     const maxDisplayedLines = 50;
 
-    const typingInterval = setInterval(() => {
-      const currentCode = generateCode();
-      
-      if (!currentCode) return;
+    // Start typing immediately
+    const currentCode = generateCode();
+    if (!currentCode) return;
 
-      tempCode = '';
-      currentIndex = 0;
-
-      const typeCharacter = () => {
-        if (currentIndex < currentCode.length) {
-          const randomDelay = Math.random() < 0.1;
-          if (!randomDelay) {
-            tempCode += currentCode[currentIndex];
-            setDisplayedCode(prev => {
-              const newArray = [...prev];
-              if (newArray.length >= maxDisplayedLines) {
-                newArray.shift();
-              }
-              newArray[newArray.length - 1] = tempCode;
-              return newArray;
-            });
-            currentIndex++;
-            setTimeout(typeCharacter, 35);
-          } else {
-            setTimeout(typeCharacter, 100);
+    const typeCharacter = () => {
+      if (currentIndex < currentCode.length) {
+        tempCode += currentCode[currentIndex];
+        setDisplayedCode(prev => {
+          const newArray = [...prev];
+          if (newArray.length >= maxDisplayedLines) {
+            newArray.shift();
           }
-        } else {
-          setDisplayedCode(prev => {
-            const newArray = [...prev, ''];
-            if (newArray.length > maxDisplayedLines) {
-              newArray.shift();
-            }
-            return newArray;
-          });
-        }
-      };
+          newArray[newArray.length - 1] = tempCode;
+          return newArray;
+        });
+        currentIndex++;
+        setTimeout(typeCharacter, 35);
+      } else {
+        setDisplayedCode(prev => {
+          const newArray = [...prev, ''];
+          if (newArray.length > maxDisplayedLines) {
+            newArray.shift();
+          }
+          return newArray;
+        });
+        
+        // Start next code block after a shorter delay
+        setTimeout(() => {
+          currentIndex = 0;
+          tempCode = '';
+          const nextCode = generateCode();
+          if (nextCode) {
+            typeCharacter();
+          }
+        }, 1000); // Reduced delay between code blocks
+      }
+    };
 
-      typeCharacter();
-    }, 4000);
+    // Start typing immediately
+    typeCharacter();
 
-    return () => clearInterval(typingInterval);
-  }, []);
+    return () => {
+      currentIndex = currentCode.length; // Stop typing on cleanup
+    };
+  }, []); // Run only once on mount
 
   useEffect(() => {
     if (terminalRef.current) {
