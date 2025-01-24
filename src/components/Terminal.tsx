@@ -94,13 +94,13 @@ const Terminal = () => {
         if (charIndex < currentMessage.length) {
           setCurrentText(currentMessage.slice(0, charIndex + 1));
           charIndex++;
-          const randomDelay = Math.random() * 20 + 15; // 15-35ms delay (faster)
+          const randomDelay = Math.random() * 20 + 15;
           setTimeout(typeCharacter, randomDelay);
         } else {
           setTimeout(() => {
             setMessageIndex(prev => prev + 1);
             setCurrentText('');
-          }, 300); // Shorter pause between messages
+          }, 300);
         }
       };
 
@@ -141,10 +141,11 @@ const Terminal = () => {
       </div>
       
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
-        <div className="text-left space-y-1">
+        <div className="text-left">
           {messages.slice(0, messageIndex).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
               {message}
+              {message !== '' && <div className="h-1"></div>}
             </div>
           ))}
           {messageIndex < messages.length && (
