@@ -95,15 +95,15 @@ const Terminal = () => {
         if (charIndex < currentMessage.length) {
           setCurrentText(prev => prev + currentMessage[charIndex]);
           charIndex++;
-          // Random delay between 50-150ms for more realistic typing
-          const randomDelay = Math.random() * 100 + 50;
+          // Faster, more consistent typing with slight variation
+          const randomDelay = Math.random() * 30 + 20; // 20-50ms delay
           setTimeout(typeCharacter, randomDelay);
         } else {
-          // Message complete, move to next after a pause
+          // Message complete, move to next after a shorter pause
           setTimeout(() => {
             setMessageIndex(prev => prev + 1);
             setCurrentText('');
-          }, 500);
+          }, 300); // Reduced pause between messages
         }
       };
 
