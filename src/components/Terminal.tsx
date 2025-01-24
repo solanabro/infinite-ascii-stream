@@ -23,65 +23,56 @@ const Terminal = () => {
     ANALYZING: 'bg-purple-500'
   };
 
-  const cryptoSlang = [
-    "HODL", "To The Moon!", "Diamond Hands", "Paper Hands", "Wen Lambo?",
-    "WAGMI", "NGMI", "Ser", "Probably Nothing", "gm", "Ape In",
-    "Degen", "Rekt", "Based", "Bearish", "Bullish", "Cope"
-  ];
-
   const generateTransactionDisplay = (signature: string, slot: number) => {
-    const slang = cryptoSlang[Math.floor(Math.random() * cryptoSlang.length)];
-    return `async function cryptoTrenches_${slot}() {
-    console.log("[🕳️ DIVING INTO THE TRENCHES]");
-    const tx = "${signature.substring(0, 20)}...";
-    await analyzeBlockchain({
-        status: "${slang}",
-        trenchDepth: ${Math.floor(Math.random() * 1000)},
-        radioactivity: "HIGH",
-        signature: tx,
+    return `async function monitorTransaction_${slot}() {
+    console.log("[📡 TRANSACTION DETECTED]");
+    const transaction = {
+        signature: "${signature.substring(0, 20)}...",
         slot: ${slot},
         timestamp: ${Date.now()},
-    });
-    return { mood: "RETARDIO_ACTIVATED" };
+        status: "CONFIRMED",
+        network: "DEVNET"
+    };
+    await processTransaction(transaction);
+    return { status: "PROCESSED" };
 }`;
   };
 
   const generateNewsDisplay = (news: NewsItem) => {
-    const slang = cryptoSlang[Math.floor(Math.random() * cryptoSlang.length)];
-    return `function decodeMarketSignals() {
-    console.log("[🧠 NEURAL NETWORK ACTIVATED]");
-    const intel = {
-        title: "${news.title.replace(/"/g, '\\"')}",
+    return `async function processMarketIntel() {
+    console.log("[📊 MARKET INTELLIGENCE]");
+    const data = {
+        headline: "${news.title.replace(/"/g, '\\"')}",
         timestamp: ${news.timestamp},
-        source: "CRYPTO_MATRIX_${Math.floor(Math.random() * 100)}",
-        sentiment: "${slang}",
-        trustLevel: "${Math.random() > 0.5 ? 'TRUST ME BRO' : 'SOURCE: VOICES IN MY HEAD'}"
+        source: "NETWORK_${Math.floor(Math.random() * 100)}",
+        priority: "HIGH"
     };
-    return { vibeCheck: "IMMACULATE" };
+    await analyzeMarketData(data);
+    return { status: "ANALYZED" };
 }`;
   };
 
   const generateSystemMessage = () => {
     const messages = [
-      `function initializeRetardio() {
-    console.log("[ 🤖 RETARDIO OS v${Math.random().toString().substring(0, 4)} ]");
-    const brain = {
-        status: "PROBABLY NOTHING",
-        memeLevel: "OVER 9000",
-        copium: "INFINITE",
-        uptime: "${Math.floor(Math.random() * 1000)}h"
+      `function initializeSystem() {
+    console.log("[🖥️ SYSTEM STATUS]");
+    const metrics = {
+        uptime: "${Math.floor(Math.random() * 1000)}h",
+        connections: ${Math.floor(Math.random() * 100)},
+        latency: "${Math.floor(Math.random() * 100)}ms",
+        status: "OPERATIONAL"
     };
-    return { condition: "ULTRA BASED" };
+    return metrics;
 }`,
-      `async function scanCryptoTrenches() {
-    console.log(":: 🕵️ TRENCH RECONNAISSANCE ::");
-    const report = {
-        degeneracy: "${Math.random() > 0.5 ? 'MAXIMUM' : 'ASTRONOMICAL'}",
-        copiumLevels: "${Math.floor(Math.random() * 100)}%",
-        hopium: "OVERDOSE",
-        status: "SENDING IT"
+      `async function scanNetwork() {
+    console.log("[🔍 NETWORK SCAN]");
+    const status = {
+        nodes: ${Math.floor(Math.random() * 1000)},
+        blockHeight: ${Math.floor(Math.random() * 1000000)},
+        tps: ${Math.floor(Math.random() * 100)},
+        health: "OPTIMAL"
     };
-    return report;
+    return status;
 }`
     ];
     return messages[Math.floor(Math.random() * messages.length)];
@@ -184,7 +175,7 @@ const Terminal = () => {
       <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-3">
           <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
-          <span className="text-white/80 font-mono text-xs sm:text-sm glow">RETARDIO STATUS: {status}</span>
+          <span className="text-white/80 font-mono text-xs sm:text-sm glow">SYSTEM STATUS: {status}</span>
         </div>
         <div className="text-white/80 font-mono text-xs sm:text-sm glow">
           {format(currentTime, 'HH:mm:ss')}
