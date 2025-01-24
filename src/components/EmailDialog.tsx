@@ -23,7 +23,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl">
+      <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl" hideClose>
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
             Welcome retardio...
@@ -38,14 +38,14 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
                 placeholder="satoshi@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-black/50 border-white/20 text-white placeholder:text-white/50 pr-24"
+                className="bg-black/50 border-white/20 text-white placeholder:text-white/50 pr-24 focus:ring-white/20 focus:border-white/30"
                 required
               />
               <Button 
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 bg-white hover:bg-white/90 text-black font-semibold"
+                className="absolute right-1 top-1 bottom-1 bg-white hover:bg-white/90 text-black font-semibold px-6 transition-colors"
               >
-                Get Started
+                Submit
               </Button>
             </div>
           </div>
