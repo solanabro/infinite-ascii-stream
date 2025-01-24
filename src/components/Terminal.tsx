@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 
 const Terminal = () => {
   const [messageIndex, setMessageIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const terminalRef = useRef<HTMLDivElement>(null);
   const status = 'PROCESSING DATA';
@@ -87,10 +88,26 @@ const Terminal = () => {
     }
 
     if (messageIndex < messages.length) {
-      const timer = setTimeout(() => {
-        setMessageIndex(prev => prev + 1);
-      }, 100);
-      return () => clearTimeout(timer);
+      let currentMessage = messages[messageIndex];
+      let charIndex = 0;
+
+      const typeCharacter = () => {
+        if (charIndex < currentMessage.length) {
+          setCurrentText(prev => prev + currentMessage[charIndex]);
+          charIndex++;
+          // Random delay between 50-150ms for more realistic typing
+          const randomDelay = Math.random() * 100 + 50;
+          setTimeout(typeCharacter, randomDelay);
+        } else {
+          // Message complete, move to next after a pause
+          setTimeout(() => {
+            setMessageIndex(prev => prev + 1);
+            setCurrentText('');
+          }, 500);
+        }
+      };
+
+      typeCharacter();
     } else {
       // Start the infinite loop of the last message
       const timer = setInterval(() => {
@@ -129,13 +146,18 @@ const Terminal = () => {
       
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
         <div className="text-left space-y-1">
-          {messages.slice(0, messageIndex + 1).map((message, index) => (
+          {messages.slice(0, messageIndex).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
               {message}
             </div>
           ))}
-          {showCursor && messageIndex < messages.length && (
-            <span className="inline-block w-2 h-5 bg-white/90 ml-1 animate-blink"></span>
+          {messageIndex < messages.length && (
+            <div className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
+              {currentText}
+              {showCursor && (
+                <span className="inline-block w-2 h-5 bg-white/90 ml-1 animate-blink"></span>
+              )}
+            </div>
           )}
         </div>
       </div>
