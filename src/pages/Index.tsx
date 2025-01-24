@@ -1,4 +1,5 @@
 import Logo from '../components/Logo';
+import Navigation from '../components/Navigation';
 import Terminal from '../components/Terminal';
 
 const Index = () => {
@@ -10,6 +11,7 @@ const Index = () => {
         </div>
         <Terminal />
       </div>
+      <Navigation />
     </div>
   );
 };
