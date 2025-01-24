@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
+import { DayPicker, type Formatters } from "react-day-picker";
+import { format as dateFnsFormat } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,6 +14,18 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const formatters: Formatters = {
+    formatCaption: (date, options) => {
+      return dateFnsFormat(date, "LLLL yyyy", { locale: options?.locale });
+    },
+    formatWeekdayName: (date, options) => {
+      return dateFnsFormat(date, "EEE", { locale: options?.locale });
+    },
+    formatDay: (date, options) => {
+      return dateFnsFormat(date, "d", { locale: options?.locale });
+    }
+  };
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -56,7 +68,7 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      formatters={{ format }}
+      formatters={formatters}
       {...props}
     />
   );
