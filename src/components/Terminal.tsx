@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { format } from 'date-fns';
-import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import axios from 'axios';
 
 interface NewsItem {
@@ -79,12 +79,13 @@ const Terminal = () => {
   }, []);
 
   useEffect(() => {
-    const connection = new Connection(clusterApiUrl('mainnet-beta'));
+    // Using a public RPC endpoint
+    const connection = new Connection('https://api.devnet.solana.com');
     let mounted = true;
 
     const fetchTransactions = async () => {
       try {
-        // Monitor a popular Solana program (e.g., Serum DEX)
+        // Using Serum DEX program ID
         const programId = new PublicKey('9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin');
         const signatures = await connection.getSignaturesForAddress(programId, { limit: 1 });
 
@@ -98,6 +99,14 @@ const Terminal = () => {
         }
       } catch (error) {
         console.error('Error fetching transactions:', error);
+        // On error, generate a system message instead
+        if (mounted) {
+          const newCode = generateSystemMessage();
+          setDisplayedCode(prev => {
+            const newArray = [...prev, newCode];
+            return newArray.slice(-50);
+          });
+        }
       }
     };
 
