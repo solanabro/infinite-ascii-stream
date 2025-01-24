@@ -1,12 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
+import axios from 'axios';
+
+interface NewsItem {
+  title: string;
+  url: string;
+  timestamp: number;
+}
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [displayedCode, setDisplayedCode] = useState<string[]>(['']);
   const [currentTime, setCurrentTime] = useState(new Date());
   const status = 'ACTIVE';
+  const [lastSignature, setLastSignature] = useState<string | null>(null);
 
   const statusColors = {
     ACTIVE: 'bg-green-500',
@@ -15,65 +23,51 @@ const Terminal = () => {
     ANALYZING: 'bg-purple-500'
   };
 
-  const generateSolanaCode = async () => {
-    try {
-      const connection = new Connection(clusterApiUrl('mainnet-beta'));
-      const signatures = await connection.getSignaturesForAddress(
-        new PublicKey('1111111111111111111111111111111111111111111'),
-        { limit: 1 }
-      );
-
-      if (signatures.length > 0) {
-        const tx = signatures[0];
-        return `async function processSolanaTransaction() {
-    // Transaction signature: ${tx.signature.substring(0, 20)}...
-    const blockTime = new Date(${tx.blockTime! * 1000});
-    console.log("Processing transaction at block ${tx.slot}");
-    await validateTransaction({
-        slot: ${tx.slot},
-        timestamp: blockTime,
-        confirmationStatus: "${tx.confirmationStatus}"
+  const generateTransactionDisplay = (signature: string, slot: number) => {
+    return `async function processTransaction_${slot}() {
+    const tx = "${signature.substring(0, 20)}...";
+    console.log("[TRANSACTION DETECTED]");
+    await validateBlock({
+        signature: tx,
+        slot: ${slot},
+        timestamp: ${Date.now()},
+        status: "CONFIRMED"
     });
-    return { status: "SUCCESS" };
+    return { status: "PROCESSED" };
 }`;
-      }
-    } catch (error) {
-      return generateDefaultCode();
-    }
   };
 
-  const generateDefaultCode = () => {
-    const functions = [
-      `function analyzeSolanaProtocol() {
-    console.log("[ SOLANA PROTOCOL ANALYSIS ]");
-    const protocol = {
-        status: "ACTIVE",
-        network: "MAINNET",
-        modules: ["Transaction Processing", "Block Validation"]
+  const generateNewsDisplay = (news: NewsItem) => {
+    return `function analyzeMarketEvent() {
+    console.log("[MARKET INTELLIGENCE]");
+    const event = {
+        title: "${news.title.replace(/"/g, '\\"')}",
+        timestamp: ${news.timestamp},
+        source: "ENCRYPTED_FEED_α"
     };
-    console.log(":: PROTOCOL CONFIGURATION ::");
-    initializeProtocol(protocol);
+    processIntelligence(event);
+    return { priority: "HIGH" };
+}`;
+  };
+
+  const generateSystemMessage = () => {
+    const messages = [
+      `function initializeProtocol() {
+    console.log("[ SYSTEM STATUS: OPTIMAL ]");
+    const modules = ["Transaction Scanner", "Intelligence Parser"];
+    return { status: "ACTIVE", uptime: "${Math.floor(Math.random() * 1000)}h" };
 }`,
-      `async function validateSolanaBlock(block) {
-    console.log(":: BLOCK VALIDATION ::");
-    if (block.transactions > 0) {
-        console.log("> Processing transactions...");
-        return true;
-    }
-    return false;
-}`,
-      `function monitorNetwork() {
-    console.log(":: NETWORK MONITORING ::");
-    console.log("> Scanning for new blocks...");
-    return {
-        status: "healthy",
-        latency: "23ms",
-        peers: 200
+      `async function validateNetwork() {
+    console.log(":: NETWORK SCAN COMPLETE ::");
+    const health = {
+        latency: "${Math.floor(Math.random() * 50)}ms",
+        nodes: ${Math.floor(Math.random() * 1000)},
+        status: "SECURE"
     };
+    return health;
 }`
     ];
-
-    return functions[Math.floor(Math.random() * functions.length)];
+    return messages[Math.floor(Math.random() * messages.length)];
   };
 
   useEffect(() => {
@@ -85,53 +79,75 @@ const Terminal = () => {
   }, []);
 
   useEffect(() => {
-    let currentIndex = 0;
-    let tempCode = '';
-    const maxDisplayedLines = 50;
+    const connection = new Connection(clusterApiUrl('mainnet-beta'));
+    let mounted = true;
 
-    const typeNextBlock = async () => {
-      const code = await generateSolanaCode() || generateDefaultCode();
-      if (!code) return;
+    const fetchTransactions = async () => {
+      try {
+        // Monitor a popular Solana program (e.g., Serum DEX)
+        const programId = new PublicKey('9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin');
+        const signatures = await connection.getSignaturesForAddress(programId, { limit: 1 });
 
-      const typeCharacter = () => {
-        if (currentIndex < code.length) {
-          tempCode += code[currentIndex];
+        if (signatures.length > 0 && signatures[0].signature !== lastSignature && mounted) {
+          setLastSignature(signatures[0].signature);
+          const newCode = generateTransactionDisplay(signatures[0].signature, signatures[0].slot);
           setDisplayedCode(prev => {
-            const newArray = [...prev];
-            if (newArray.length >= maxDisplayedLines) {
-              newArray.shift();
-            }
-            newArray[newArray.length - 1] = tempCode;
-            return newArray;
+            const newArray = [...prev, newCode];
+            return newArray.slice(-50); // Keep last 50 lines
           });
-          currentIndex++;
-          setTimeout(typeCharacter, 35);
-        } else {
-          setDisplayedCode(prev => {
-            const newArray = [...prev, ''];
-            if (newArray.length > maxDisplayedLines) {
-              newArray.shift();
-            }
-            return newArray;
-          });
-          
-          setTimeout(() => {
-            currentIndex = 0;
-            tempCode = '';
-            typeNextBlock();
-          }, 1000);
         }
-      };
-
-      typeCharacter();
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
     };
 
-    typeNextBlock();
+    const fetchNews = async () => {
+      try {
+        // Note: Replace with actual crypto news API in production
+        const response = await axios.get('https://api.coingecko.com/api/v3/news');
+        if (response.data && response.data.length > 0 && mounted) {
+          const newsItem = {
+            title: response.data[0].title,
+            url: response.data[0].url,
+            timestamp: Date.now()
+          };
+          const newCode = generateNewsDisplay(newsItem);
+          setDisplayedCode(prev => {
+            const newArray = [...prev, newCode];
+            return newArray.slice(-50);
+          });
+        }
+      } catch (error) {
+        // If news API fails, generate system message instead
+        if (mounted) {
+          const newCode = generateSystemMessage();
+          setDisplayedCode(prev => {
+            const newArray = [...prev, newCode];
+            return newArray.slice(-50);
+          });
+        }
+      }
+    };
+
+    const transactionInterval = setInterval(fetchTransactions, 3000);
+    const newsInterval = setInterval(fetchNews, 5000);
+    const systemInterval = setInterval(() => {
+      if (mounted) {
+        const newCode = generateSystemMessage();
+        setDisplayedCode(prev => {
+          const newArray = [...prev, newCode];
+          return newArray.slice(-50);
+        });
+      }
+    }, 7000);
 
     return () => {
-      currentIndex = 0;
+      mounted = false;
+      clearInterval(transactionInterval);
+      clearInterval(newsInterval);
+      clearInterval(systemInterval);
     };
-  }, []);
+  }, [lastSignature]);
 
   useEffect(() => {
     if (terminalRef.current) {
