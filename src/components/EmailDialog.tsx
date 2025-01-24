@@ -13,7 +13,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
     e.preventDefault();
     if (email) {
       toast({
-        title: "Welcome aboard!",
+        title: "Welcome aboard, retard.",
         description: "Prepare for enlightenment.",
       });
       setOpen(false);
@@ -26,15 +26,16 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
       <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
-            Welcome
+            Welcome retardio...
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
+            <p className="text-white/80">Enter your email address.</p>
             <div className="relative">
               <Input
                 type="email"
-                placeholder="Enter your email to continue..."
+                placeholder="satoshi@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-black/50 border-white/20 text-white placeholder:text-white/50 pr-24 focus:ring-white/20 focus:border-white/30"
@@ -42,7 +43,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
               />
               <Button 
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-semibold px-6 transition-colors"
+                className="absolute right-1 top-1 bottom-1 bg-white hover:bg-white/90 text-black font-semibold px-6 transition-colors"
               >
                 Submit
               </Button>
