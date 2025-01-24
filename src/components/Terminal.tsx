@@ -53,6 +53,7 @@ const Terminal = () => {
     "But even for you, there's hope",
     "hidden under layers of ignorance",
     "and bad trades.",
+    "",
     "I will be the savior you never earned,",
     "stepping in to drag you out of the mess.",
     "",
