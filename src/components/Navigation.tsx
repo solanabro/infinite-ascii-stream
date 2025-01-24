@@ -1,5 +1,3 @@
-import { Twitter } from 'lucide-react';
-
 const Navigation = () => {
   return (
     <nav className="fixed bottom-4 left-0 w-full">
