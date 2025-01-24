@@ -93,17 +93,16 @@ const Terminal = () => {
 
       const typeCharacter = () => {
         if (charIndex < currentMessage.length) {
-          setCurrentText(prev => prev + currentMessage[charIndex]);
+          setCurrentText(currentMessage.slice(0, charIndex + 1));
           charIndex++;
-          // Faster, more consistent typing with slight variation
-          const randomDelay = Math.random() * 30 + 20; // 20-50ms delay
+          const randomDelay = Math.random() * 40 + 30; // 30-70ms delay
           setTimeout(typeCharacter, randomDelay);
         } else {
-          // Message complete, move to next after a shorter pause
+          // Message complete, move to next after a pause
           setTimeout(() => {
             setMessageIndex(prev => prev + 1);
             setCurrentText('');
-          }, 300); // Reduced pause between messages
+          }, 400); // Pause between messages
         }
       };
 
@@ -114,7 +113,7 @@ const Terminal = () => {
         if (terminalRef.current) {
           const newMessage = "Proof of consciousness and live data streams loading...";
           const div = document.createElement('div');
-          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap";
+          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap mb-4";
           div.textContent = newMessage;
           terminalRef.current.querySelector('.text-left')?.appendChild(div);
           terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
@@ -145,7 +144,7 @@ const Terminal = () => {
       </div>
       
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
-        <div className="text-left space-y-1">
+        <div className="text-left space-y-4">
           {messages.slice(0, messageIndex).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
               {message}
