@@ -34,7 +34,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
             <div className="relative">
               <Input
                 type="email"
-                placeholder="satoshi@example.com"
+                placeholder="Enter your email to continue..."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-black/50 border-white/20 text-white placeholder:text-white/50 pr-24 focus:ring-white/20 focus:border-white/30"
@@ -42,7 +42,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
               />
               <Button 
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white hover:bg-white/90 text-black font-semibold px-6 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-semibold px-6 transition-colors"
               >
                 Submit
               </Button>
