@@ -42,7 +42,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
               />
               <Button 
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 bg-white hover:bg-white/90 text-black font-semibold px-6 transition-colors"
+                className="absolute right-1 top-1/2 -translate-y-1/2 bg-white hover:bg-white/90 text-black font-semibold px-6 transition-colors"
               >
                 Submit
               </Button>
