@@ -1,50 +1,59 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
-export function EmailDialog() {
+export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) => void }) {
   const [open, setOpen] = useState(true);
   const [email, setEmail] = useState("");
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      // Here you would typically send the email to your backend
-      toast({
-        title: "Welcome aboard!",
-        description: "You've been successfully registered.",
-      });
-      setOpen(false);
+      try {
+        const { error } = await window.supabase
+          .from('emails')
+          .insert([{ email }]);
+
+        if (error) throw error;
+
+        toast({
+          title: "Welcome retardio",
+          description: "Prepare for the truth.",
+        });
+        
+        onEmailSubmit(email);
+        setOpen(false);
+      } catch (error) {
+        console.error('Error saving email:', error);
+        toast({
+          title: "Error",
+          description: "Failed to register. Try again.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md border border-purple-500/20 bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Welcome to Nevera Terminal
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <p className="text-gray-300">Enter your email to receive alerts and insights engineered for your success.</p>
+          <p className="text-white text-lg font-bold">Welcome retardio</p>
+          <div className="relative">
             <Input
               type="email"
-              placeholder="satoshi@example.com"
+              placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-gray-800/50 border-purple-500/20 text-gray-100 placeholder:text-gray-500"
+              className="bg-black/50 border-white/20 text-white placeholder:text-white/50 pr-24"
               required
             />
-          </div>
-          <div className="flex justify-end">
             <Button 
               type="submit"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+              className="absolute right-0 top-0 h-full bg-white text-black hover:bg-white/90 transition-all"
             >
               Get Started
             </Button>
