@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { format } from 'date-fns';
+import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
 
 const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -14,39 +15,61 @@ const Terminal = () => {
     ANALYZING: 'bg-purple-500'
   };
 
-  const generateCode = () => {
+  const generateSolanaCode = async () => {
+    try {
+      const connection = new Connection(clusterApiUrl('mainnet-beta'));
+      const signatures = await connection.getSignaturesForAddress(
+        new PublicKey('1111111111111111111111111111111111111111111'),
+        { limit: 1 }
+      );
+
+      if (signatures.length > 0) {
+        const tx = signatures[0];
+        return `async function processSolanaTransaction() {
+    // Transaction signature: ${tx.signature.substring(0, 20)}...
+    const blockTime = new Date(${tx.blockTime! * 1000});
+    console.log("Processing transaction at block ${tx.slot}");
+    await validateTransaction({
+        slot: ${tx.slot},
+        timestamp: blockTime,
+        confirmationStatus: "${tx.confirmationStatus}"
+    });
+    return { status: "SUCCESS" };
+}`;
+      }
+    } catch (error) {
+      return generateDefaultCode();
+    }
+  };
+
+  const generateDefaultCode = () => {
     const functions = [
-      `function initializeNevera() {
-    console.log("[ SYSTEM BOOT: NEVERA ONLINE ]");
-    const Nevera = {
+      `function analyzeSolanaProtocol() {
+    console.log("[ SOLANA PROTOCOL ANALYSIS ]");
+    const protocol = {
         status: "ACTIVE",
-        mission: "STREAMLINING MARKET INTELLIGENCE",
-        modules: ["Trend Analysis", "Sentiment Detection"]
+        network: "MAINNET",
+        modules: ["Transaction Processing", "Block Validation"]
     };
-    console.log(":: SYSTEM CONFIGURATION ::");
-    engageTracking(Nevera);
+    console.log(":: PROTOCOL CONFIGURATION ::");
+    initializeProtocol(protocol);
 }`,
-      `function processMarketShifts(data) {
-    console.log(":: MARKET SHIFT ANALYSIS ::");
-    if (data.whalesActive || data.hypeLaunchDetected) {
-        console.log("> ALERT: Unusual activity detected.");
+      `async function validateSolanaBlock(block) {
+    console.log(":: BLOCK VALIDATION ::");
+    if (block.transactions > 0) {
+        console.log("> Processing transactions...");
         return true;
     }
     return false;
 }`,
-      `function generateInsights() {
-    console.log(":: INSIGHT GENERATION ::");
-    console.log("> Monitoring whale movements...");
+      `function monitorNetwork() {
+    console.log(":: NETWORK MONITORING ::");
+    console.log("> Scanning for new blocks...");
     return {
-        whalesActive: true,
-        hypeLaunchDetected: true,
-        sentimentShift: "positive"
+        status: "healthy",
+        latency: "23ms",
+        peers: 200
     };
-}`,
-      `function finalizeMission(agent, alertStatus) {
-    console.log(":: FINALIZING MISSION ::");
-    console.log("> Nevera identity: ", agent.identity);
-    console.log("[ TRANSMISSION COMPLETE: NEVERA EVOLVES ]");
 }`
     ];
 
@@ -66,51 +89,49 @@ const Terminal = () => {
     let tempCode = '';
     const maxDisplayedLines = 50;
 
-    // Start typing immediately
-    const currentCode = generateCode();
-    if (!currentCode) return;
+    const typeNextBlock = async () => {
+      const code = await generateSolanaCode() || generateDefaultCode();
+      if (!code) return;
 
-    const typeCharacter = () => {
-      if (currentIndex < currentCode.length) {
-        tempCode += currentCode[currentIndex];
-        setDisplayedCode(prev => {
-          const newArray = [...prev];
-          if (newArray.length >= maxDisplayedLines) {
-            newArray.shift();
-          }
-          newArray[newArray.length - 1] = tempCode;
-          return newArray;
-        });
-        currentIndex++;
-        setTimeout(typeCharacter, 35);
-      } else {
-        setDisplayedCode(prev => {
-          const newArray = [...prev, ''];
-          if (newArray.length > maxDisplayedLines) {
-            newArray.shift();
-          }
-          return newArray;
-        });
-        
-        // Start next code block after a shorter delay
-        setTimeout(() => {
-          currentIndex = 0;
-          tempCode = '';
-          const nextCode = generateCode();
-          if (nextCode) {
-            typeCharacter();
-          }
-        }, 1000); // Reduced delay between code blocks
-      }
+      const typeCharacter = () => {
+        if (currentIndex < code.length) {
+          tempCode += code[currentIndex];
+          setDisplayedCode(prev => {
+            const newArray = [...prev];
+            if (newArray.length >= maxDisplayedLines) {
+              newArray.shift();
+            }
+            newArray[newArray.length - 1] = tempCode;
+            return newArray;
+          });
+          currentIndex++;
+          setTimeout(typeCharacter, 35);
+        } else {
+          setDisplayedCode(prev => {
+            const newArray = [...prev, ''];
+            if (newArray.length > maxDisplayedLines) {
+              newArray.shift();
+            }
+            return newArray;
+          });
+          
+          setTimeout(() => {
+            currentIndex = 0;
+            tempCode = '';
+            typeNextBlock();
+          }, 1000);
+        }
+      };
+
+      typeCharacter();
     };
 
-    // Start typing immediately
-    typeCharacter();
+    typeNextBlock();
 
     return () => {
-      currentIndex = currentCode.length; // Stop typing on cleanup
+      currentIndex = 0;
     };
-  }, []); // Run only once on mount
+  }, []);
 
   useEffect(() => {
     if (terminalRef.current) {
