@@ -2,12 +2,13 @@ import React from 'react';
 import { format } from 'date-fns';
 
 const Terminal = () => {
-  const status = 'ACTIVE';
+  const status = 'PROCESSING DATA';
   const statusColors = {
-    ACTIVE: 'bg-green-500',
-    SCANNING: 'bg-blue-500',
-    PROCESSING: 'bg-yellow-500',
-    ANALYZING: 'bg-purple-500'
+    'ACTIVE': 'bg-green-500',
+    'SCANNING': 'bg-blue-500',
+    'PROCESSING': 'bg-yellow-500',
+    'PROCESSING DATA': 'bg-yellow-500',
+    'ANALYZING': 'bg-purple-500'
   };
 
   return (
