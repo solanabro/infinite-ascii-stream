@@ -145,7 +145,7 @@ const Terminal = () => {
           {messages.slice(0, messageIndex).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap min-h-[1.5em]">
               {message}
-              {message !== '' && <div className="h-4"></div>}
+              {message !== '' && <div className="h-2"></div>}
             </div>
           ))}
           {messageIndex < messages.length && (
