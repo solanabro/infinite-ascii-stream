@@ -39,35 +39,16 @@
   body {
     @apply bg-background text-foreground font-mono;
     font-family: 'JetBrains Mono', monospace;
-    background: radial-gradient(circle at center, rgb(13, 17, 28) 0%, rgb(2, 2, 4) 100%);
+    background: radial-gradient(circle at center, rgb(13, 17, 23) 0%, rgb(2, 2, 4) 100%);
   }
 }
 
-.code-rain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-.content {
-  position: relative;
-  z-index: 1;
-}
-
-.glow {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
 .terminal-header {
-  background: linear-gradient(90deg, rgba(13, 17, 28, 0.8) 0%, rgba(2, 2, 4, 0.8) 100%);
-  box-shadow: 0 0 20px rgba(0, 0, 255, 0.1);
+  background: linear-gradient(90deg, rgba(13, 17, 23, 0.8) 0%, rgba(2, 2, 4, 0.8) 100%);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .terminal-header::before {
@@ -85,12 +66,11 @@
 }
 
 .terminal-body {
-  background: linear-gradient(180deg, rgba(13, 17, 28, 0.6) 0%, rgba(2, 2, 4, 0.8) 100%);
-  box-shadow: 0 0 30px rgba(0, 0, 255, 0.05);
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.6) 0%, rgba(2, 2, 4, 0.8) 100%);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.02);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .terminal-body::before {
@@ -111,9 +91,8 @@
   box-shadow: 0 0 10px currentColor;
 }
 
-/* Custom scrollbar styles */
 .terminal-body::-webkit-scrollbar {
-  width: 8px; /* This only affects vertical scrollbar */
+  width: 8px;
 }
 
 .terminal-body::-webkit-scrollbar-track {
@@ -128,13 +107,4 @@
 
 .terminal-body::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.15);
-}
-
-@keyframes blink {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
 }
