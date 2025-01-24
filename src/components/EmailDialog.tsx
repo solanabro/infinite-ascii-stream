@@ -23,7 +23,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl [&>button]:hidden">
+      <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl" hideClose>
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
             Welcome retardio...
