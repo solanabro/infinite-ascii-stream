@@ -17,60 +17,50 @@ const Terminal = () => {
   const [lastSignature, setLastSignature] = useState<string | null>(null);
 
   const statusColors = {
-    ACTIVE: 'bg-green-500',
-    SCANNING: 'bg-blue-500',
-    PROCESSING: 'bg-yellow-500',
-    ANALYZING: 'bg-purple-500'
+    ACTIVE: 'bg-white',
+    SCANNING: 'bg-white',
+    PROCESSING: 'bg-white',
+    ANALYZING: 'bg-white'
   };
 
   const generateTransactionDisplay = (signature: string, slot: number) => {
     return `async function monitorTransaction_${slot}() {
-    console.log("[📡 TRANSACTION DETECTED]");
     const transaction = {
         signature: "${signature.substring(0, 20)}...",
         slot: ${slot},
         timestamp: ${Date.now()},
-        status: "CONFIRMED",
-        network: "DEVNET"
+        status: "CONFIRMED"
     };
     await processTransaction(transaction);
-    return { status: "PROCESSED" };
 }`;
   };
 
   const generateNewsDisplay = (news: NewsItem) => {
     return `async function processMarketIntel() {
-    console.log("[📊 MARKET INTELLIGENCE]");
     const data = {
         headline: "${news.title.replace(/"/g, '\\"')}",
         timestamp: ${news.timestamp},
-        source: "NETWORK_${Math.floor(Math.random() * 100)}",
-        priority: "HIGH"
+        source: "NETWORK_${Math.floor(Math.random() * 100)}"
     };
     await analyzeMarketData(data);
-    return { status: "ANALYZED" };
 }`;
   };
 
   const generateSystemMessage = () => {
     const messages = [
       `function initializeSystem() {
-    console.log("[🖥️ SYSTEM STATUS]");
     const metrics = {
         uptime: "${Math.floor(Math.random() * 1000)}h",
         connections: ${Math.floor(Math.random() * 100)},
-        latency: "${Math.floor(Math.random() * 100)}ms",
-        status: "OPERATIONAL"
+        latency: "${Math.floor(Math.random() * 100)}ms"
     };
     return metrics;
 }`,
       `async function scanNetwork() {
-    console.log("[🔍 NETWORK SCAN]");
     const status = {
         nodes: ${Math.floor(Math.random() * 1000)},
         blockHeight: ${Math.floor(Math.random() * 1000000)},
-        tps: ${Math.floor(Math.random() * 100)},
-        health: "OPTIMAL"
+        tps: ${Math.floor(Math.random() * 100)}
     };
     return status;
 }`
@@ -171,8 +161,8 @@ const Terminal = () => {
   }, [displayedCode]);
 
   return (
-    <div className="relative space-y-2 sm:space-y-4 mb-8">
-      <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
+    <div className="fixed inset-0 bg-black">
+      <div className="absolute top-0 left-0 right-0 terminal-header p-2 sm:p-4 border-b border-white/10 flex items-center justify-between z-10">
         <div className="flex items-center space-x-2 sm:space-x-3">
           <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
           <span className="text-white/80 font-mono text-xs sm:text-sm glow">SYSTEM STATUS: {status}</span>
@@ -184,18 +174,10 @@ const Terminal = () => {
       
       <div 
         ref={terminalRef} 
-        className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
-        style={{ scrollBehavior: 'smooth', msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+        className="fixed inset-0 pt-12 overflow-y-auto overflow-x-hidden font-mono text-white/90"
       >
-        <style>
-          {`
-            .scrollbar-hide::-webkit-scrollbar {
-              display: none;
-            }
-          `}
-        </style>
         {displayedCode.map((code, index) => (
-          <pre key={index} className="text-white/90 text-xs sm:text-sm font-mono mb-2 sm:mb-4 whitespace-pre hover:text-white/100 transition-colors">
+          <pre key={index} className="p-2 sm:p-4 text-xs sm:text-sm whitespace-pre hover:text-white transition-colors">
             {code}
             {index === displayedCode.length - 1 && (
               <span className="animate-pulse inline-block w-1.5 sm:w-2 h-3 sm:h-4 bg-white/90 ml-1 glow">_</span>
