@@ -23,7 +23,7 @@ const Terminal = () => {
         </div>
       </div>
       
-      <div className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] flex items-center justify-center p-2 sm:p-4 border border-white/5 rounded-lg">
+      <div className="terminal-body overflow-hidden h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] flex items-center justify-center p-2 sm:p-4 border border-white/5 rounded-lg">
         <div className="flex items-center space-x-2">
           <span className="text-white/90 font-mono text-sm sm:text-base tracking-widest animate-pulse glow">
             LOADING
