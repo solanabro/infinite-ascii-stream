@@ -143,16 +143,16 @@ const Terminal = () => {
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
         <div className="text-left">
           {messages.slice(0, messageIndex).map((message, index) => (
-            <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
+            <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap min-h-[1.5em]">
               {message}
-              {message !== '' && <div className="h-1"></div>}
+              {message !== '' && <div className="h-4"></div>}
             </div>
           ))}
           {messageIndex < messages.length && (
-            <div className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
+            <div className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap min-h-[1.5em]">
               {currentText}
               {showCursor && (
-                <span className="inline-block w-2 h-5 bg-white/90 ml-1 animate-blink"></span>
+                <span className="inline-block w-2 h-4 bg-white/90 ml-1"></span>
               )}
             </div>
           )}
