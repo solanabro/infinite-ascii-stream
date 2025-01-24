@@ -13,7 +13,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
     e.preventDefault();
     if (email) {
       toast({
-        title: "Welcome aboard, retard.",
+        title: "Welcome aboard!",
         description: "Prepare for enlightenment.",
       });
       setOpen(false);
@@ -26,7 +26,7 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
       <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
-            Welcome retardio
+            Welcome
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
