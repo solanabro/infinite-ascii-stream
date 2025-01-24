@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 
 const Terminal = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
+  const terminalRef = useRef<HTMLDivElement>(null);
   const status = 'PROCESSING DATA';
 
   const messages = [
@@ -80,6 +81,11 @@ const Terminal = () => {
   }, []);
 
   useEffect(() => {
+    // Auto-scroll effect
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+
     if (messageIndex < messages.length) {
       const timer = setTimeout(() => {
         setMessageIndex(prev => prev + 1);
@@ -87,10 +93,17 @@ const Terminal = () => {
       return () => clearTimeout(timer);
     } else {
       // Start the infinite loop of the last message
-      const timer = setTimeout(() => {
-        setMessageIndex(messages.length - 1);
+      const timer = setInterval(() => {
+        if (terminalRef.current) {
+          const newMessage = "Proof of consciousness and live data streams loading...";
+          const div = document.createElement('div');
+          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap";
+          div.textContent = newMessage;
+          terminalRef.current.querySelector('.text-left')?.appendChild(div);
+          terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+        }
       }, 2000);
-      return () => clearTimeout(timer);
+      return () => clearInterval(timer);
     }
   }, [messageIndex]);
 
@@ -114,7 +127,7 @@ const Terminal = () => {
         </div>
       </div>
       
-      <div className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
+      <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
         <div className="text-left space-y-1">
           {messages.slice(0, messageIndex + 1).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
