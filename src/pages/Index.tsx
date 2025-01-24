@@ -1,7 +1,6 @@
 import Logo from '../components/Logo';
 import Navigation from '../components/Navigation';
 import Terminal from '../components/Terminal';
-import BackgroundMusic from '../components/BackgroundMusic';
 
 const Index = () => {
   return (
@@ -13,7 +12,6 @@ const Index = () => {
         <Terminal />
       </div>
       <Navigation />
-      <BackgroundMusic />
     </div>
   );
 };
