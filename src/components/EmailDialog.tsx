@@ -26,12 +26,11 @@ export function EmailDialog({ onEmailSubmit }: { onEmailSubmit: (email: string) 
       <DialogContent className="sm:max-w-md border border-white/20 bg-black/95 backdrop-blur-xl [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
-            Welcome retardio...
+            Welcome retardio
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <p className="text-white/80">Enter your email address.</p>
             <div className="relative">
               <Input
                 type="email"
