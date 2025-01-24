@@ -82,7 +82,6 @@ const Terminal = () => {
   }, []);
 
   useEffect(() => {
-    // Auto-scroll effect
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
@@ -95,25 +94,23 @@ const Terminal = () => {
         if (charIndex < currentMessage.length) {
           setCurrentText(currentMessage.slice(0, charIndex + 1));
           charIndex++;
-          const randomDelay = Math.random() * 40 + 30; // 30-70ms delay
+          const randomDelay = Math.random() * 20 + 15; // 15-35ms delay (faster)
           setTimeout(typeCharacter, randomDelay);
         } else {
-          // Message complete, move to next after a pause
           setTimeout(() => {
             setMessageIndex(prev => prev + 1);
             setCurrentText('');
-          }, 400); // Pause between messages
+          }, 300); // Shorter pause between messages
         }
       };
 
       typeCharacter();
     } else {
-      // Start the infinite loop of the last message
       const timer = setInterval(() => {
         if (terminalRef.current) {
           const newMessage = "Proof of consciousness and live data streams loading...";
           const div = document.createElement('div');
-          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap mb-4";
+          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap";
           div.textContent = newMessage;
           terminalRef.current.querySelector('.text-left')?.appendChild(div);
           terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
@@ -144,7 +141,7 @@ const Terminal = () => {
       </div>
       
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
-        <div className="text-left space-y-4">
+        <div className="text-left space-y-1">
           {messages.slice(0, messageIndex).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap">
               {message}
