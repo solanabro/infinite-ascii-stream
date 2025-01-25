@@ -157,13 +157,13 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Please enter your email to continue...
+              {">"} Enter terminal access key:
             </div>
             <Input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="satoshi@nevera.terminal"
               className="bg-transparent text-white/90 border-white/20"
               required
             />
