@@ -157,7 +157,7 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Please enter your email to continue...
+              {">"}{"  "}satoshi@nevera.terminal
             </div>
             <Input
               type="email"
