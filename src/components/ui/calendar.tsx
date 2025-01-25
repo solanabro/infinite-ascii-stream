@@ -18,11 +18,20 @@ function Calendar({
     formatCaption: (date, options) => {
       return dateFnsFormat(date, "LLLL yyyy", { locale: options?.locale });
     },
+    formatMonthCaption: (date, options) => {
+      return dateFnsFormat(date, "LLLL", { locale: options?.locale });
+    },
+    formatYearCaption: (date, options) => {
+      return dateFnsFormat(date, "yyyy", { locale: options?.locale });
+    },
     formatWeekdayName: (date, options) => {
       return dateFnsFormat(date, "EEE", { locale: options?.locale });
     },
     formatDay: (date, options) => {
       return dateFnsFormat(date, "d", { locale: options?.locale });
+    },
+    formatWeekNumber: (weekNumber) => {
+      return `W${weekNumber}`;
     }
   };
 
