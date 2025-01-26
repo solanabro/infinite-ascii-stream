@@ -7,11 +7,9 @@ const Terminal = () => {
   const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [email, setEmail] = useState(() => {
-    // Check localStorage for existing email
-    return localStorage.getItem('terminal_email') || '';
+    return localStorage.getItem('terminal_email') || 'toly@solana.com';
   });
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(() => {
-    // Check if email exists in localStorage
     return !!localStorage.getItem('terminal_email');
   });
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -107,6 +105,22 @@ const Terminal = () => {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
 
+    // If email is already stored, just show the loading message
+    if (localStorage.getItem('terminal_email')) {
+      setStatus('INITIALIZING');
+      const timer = setInterval(() => {
+        if (terminalRef.current) {
+          const newMessage = "Proof of consciousness and live data streams loading...";
+          const div = document.createElement('div');
+          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap";
+          div.textContent = newMessage;
+          terminalRef.current.querySelector('.text-left')?.appendChild(div);
+          terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+        }
+      }, 2000);
+      return () => clearInterval(timer);
+    }
+
     if (messageIndex < messages.length) {
       setStatus('PROCESSING DATA');
       let currentMessage = messages[messageIndex];
@@ -169,7 +183,7 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Get early access to real-time alerts...
+              {">"}{"  "}Please enter your email to continue:
             </div>
             <Input
               type="email"
