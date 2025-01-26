@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { Input } from './ui/input';
-import { Resend } from 'resend';
 
 const Terminal = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem('terminal_email') || 'toly@solana.com';
+  });
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(() => {
     return !!localStorage.getItem('terminal_email');
   });
@@ -80,27 +81,12 @@ const Terminal = () => {
     "Proof of consciousness and live data streams loading..."
   ];
 
-  const sendWelcomeEmail = async (email: string) => {
-    try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: email,
-        subject: 'Welcome to NEVERA',
-        html: '<p>Welcome to NEVERA. Your journey begins now.</p>'
-      });
-    } catch (error) {
-      console.error('Failed to send welcome email:', error);
-    }
-  };
-
-  const handleEmailSubmit = async (e: React.FormEvent) => {
+  const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email && email.includes('@')) {
       localStorage.setItem('terminal_email', email);
       setIsEmailSubmitted(true);
       setStatus('PROCESSING DATA');
-      await sendWelcomeEmail(email);
     }
   };
 
@@ -197,7 +183,7 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Enter your email to continue:
+              {">"}{"  "}Please enter your email to continue:
             </div>
             <Input
               type="email"
