@@ -7,17 +7,18 @@ const Terminal = () => {
   const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [email, setEmail] = useState(() => {
-    // Check localStorage for existing email
     return localStorage.getItem('terminal_email') || '';
   });
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(() => {
-    // Check if email exists in localStorage
     return !!localStorage.getItem('terminal_email');
+  });
+  const [isFirstVisit, setIsFirstVisit] = useState(() => {
+    return !localStorage.getItem('has_visited');
   });
   const terminalRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState('AWAITING USER INPUT');
 
-  const messages = [
+  const messages = isFirstVisit ? [
     "> INITIALIZING NEVERA TERMINAL...",
     "> AUTHORIZING CREDENTIALS...",
     "> AUTHORIZED.",
@@ -81,12 +82,13 @@ const Terminal = () => {
     "█████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
     "",
     "Proof of consciousness and live data streams loading..."
-  ];
+  ] : ["Proof of consciousness and live data streams loading..."];
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email && email.includes('@')) {
       localStorage.setItem('terminal_email', email);
+      localStorage.setItem('has_visited', 'true');
       setIsEmailSubmitted(true);
       setStatus('PROCESSING DATA');
     }
@@ -141,7 +143,7 @@ const Terminal = () => {
       }, 2000);
       return () => clearInterval(timer);
     }
-  }, [messageIndex, isEmailSubmitted]);
+  }, [messageIndex, isEmailSubmitted, messages]);
 
   const statusColors = {
     'ACTIVE': 'bg-green-500',
@@ -169,7 +171,7 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Get early access to real-time alerts...
+              {">"}{"  "}Enter your email to continue
             </div>
             <Input
               type="email"
