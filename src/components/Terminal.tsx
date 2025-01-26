@@ -1,24 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { Input } from './ui/input';
+import { Resend } from 'resend';
 
 const Terminal = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const [email, setEmail] = useState(() => {
-    return localStorage.getItem('terminal_email') || '';
-  });
+  const [email, setEmail] = useState('');
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(() => {
     return !!localStorage.getItem('terminal_email');
-  });
-  const [isFirstVisit, setIsFirstVisit] = useState(() => {
-    return !localStorage.getItem('has_visited');
   });
   const terminalRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState('AWAITING USER INPUT');
 
-  const messages = isFirstVisit ? [
+  const messages = [
     "> INITIALIZING NEVERA TERMINAL...",
     "> AUTHORIZING CREDENTIALS...",
     "> AUTHORIZED.",
@@ -82,15 +78,29 @@ const Terminal = () => {
     "█████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
     "",
     "Proof of consciousness and live data streams loading..."
-  ] : ["Proof of consciousness and live data streams loading..."];
+  ];
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const sendWelcomeEmail = async (email: string) => {
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: email,
+        subject: 'Welcome to NEVERA',
+        html: '<p>Welcome to NEVERA. Your journey begins now.</p>'
+      });
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+    }
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email && email.includes('@')) {
       localStorage.setItem('terminal_email', email);
-      localStorage.setItem('has_visited', 'true');
       setIsEmailSubmitted(true);
       setStatus('PROCESSING DATA');
+      await sendWelcomeEmail(email);
     }
   };
 
@@ -107,6 +117,22 @@ const Terminal = () => {
 
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+
+    // If email is already stored, just show the loading message
+    if (localStorage.getItem('terminal_email')) {
+      setStatus('INITIALIZING');
+      const timer = setInterval(() => {
+        if (terminalRef.current) {
+          const newMessage = "Proof of consciousness and live data streams loading...";
+          const div = document.createElement('div');
+          div.className = "text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap";
+          div.textContent = newMessage;
+          terminalRef.current.querySelector('.text-left')?.appendChild(div);
+          terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+        }
+      }, 2000);
+      return () => clearInterval(timer);
     }
 
     if (messageIndex < messages.length) {
@@ -143,7 +169,7 @@ const Terminal = () => {
       }, 2000);
       return () => clearInterval(timer);
     }
-  }, [messageIndex, isEmailSubmitted, messages]);
+  }, [messageIndex, isEmailSubmitted]);
 
   const statusColors = {
     'ACTIVE': 'bg-green-500',
@@ -171,7 +197,7 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Enter your email to continue
+              {">"}{"  "}Enter your email to continue:
             </div>
             <Input
               type="email"
