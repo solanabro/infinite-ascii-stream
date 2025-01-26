@@ -6,10 +6,16 @@ const Terminal = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const [email, setEmail] = useState('');
-  const [isEmailSubmitted, setIsEmailSubmitted] = useState(false);
+  const [email, setEmail] = useState(() => {
+    // Check localStorage for existing email
+    return localStorage.getItem('terminal_email') || '';
+  });
+  const [isEmailSubmitted, setIsEmailSubmitted] = useState(() => {
+    // Check if email exists in localStorage
+    return !!localStorage.getItem('terminal_email');
+  });
   const terminalRef = useRef<HTMLDivElement>(null);
-  const status = 'PROCESSING DATA';
+  const [status, setStatus] = useState('AWAITING USER INPUT');
 
   const messages = [
     "> INITIALIZING NEVERA TERMINAL...",
@@ -80,7 +86,9 @@ const Terminal = () => {
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email && email.includes('@')) {
+      localStorage.setItem('terminal_email', email);
       setIsEmailSubmitted(true);
+      setStatus('PROCESSING DATA');
     }
   };
 
@@ -100,6 +108,7 @@ const Terminal = () => {
     }
 
     if (messageIndex < messages.length) {
+      setStatus('PROCESSING DATA');
       let currentMessage = messages[messageIndex];
       let charIndex = 0;
 
@@ -119,6 +128,7 @@ const Terminal = () => {
 
       typeCharacter();
     } else {
+      setStatus('INITIALIZING');
       const timer = setInterval(() => {
         if (terminalRef.current) {
           const newMessage = "Proof of consciousness and live data streams loading...";
@@ -136,9 +146,11 @@ const Terminal = () => {
   const statusColors = {
     'ACTIVE': 'bg-green-500',
     'SCANNING': 'bg-blue-500',
-    'PROCESSING': 'bg-yellow-500',
     'PROCESSING DATA': 'bg-yellow-500',
-    'ANALYZING': 'bg-purple-500'
+    'PROCESSING': 'bg-yellow-500',
+    'ANALYZING': 'bg-purple-500',
+    'INITIALIZING': 'bg-blue-500',
+    'AWAITING USER INPUT': 'bg-yellow-500'
   };
 
   if (!isEmailSubmitted) {
@@ -147,7 +159,7 @@ const Terminal = () => {
         <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
-            <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: AWAITING USER INPUT</span>
+            <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: {status}</span>
           </div>
           <div className="text-white/80 font-mono text-xs sm:text-sm glow">
             {format(new Date(), 'HH:mm:ss')}
@@ -157,7 +169,7 @@ const Terminal = () => {
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Please enter your email to continue...
+              {">"}{"  "}Get early access to real-time alerts...
             </div>
             <Input
               type="email"
@@ -194,7 +206,7 @@ const Terminal = () => {
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
         <div className="text-left">
           <div className="text-white/90 font-mono text-sm sm:text-base mb-4">
-            {">"}{"  "}Email verified: {email}
+            {">"}{"  "}Stored: {email}
           </div>
           {messages.slice(0, messageIndex).map((message, index) => (
             <div key={index} className="text-white/90 font-mono text-sm sm:text-base whitespace-pre-wrap min-h-[1.5em]">
