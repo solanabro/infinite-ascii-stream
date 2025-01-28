@@ -52,14 +52,10 @@ export const messages = [
   "hope you typed the correct email",
   "",
   ".",
-  "",
   ".",
-  "",
   ".",
   "",
   "enjoy.",
   "",
-  "█████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
-  "",
-  "Proof of consciousness and live data streams loading..."
+  "█████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
 ];
