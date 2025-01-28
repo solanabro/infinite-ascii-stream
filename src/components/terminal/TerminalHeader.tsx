@@ -7,7 +7,9 @@ interface TerminalHeaderProps {
 
 const TerminalHeader = ({ status, messageIndex }: TerminalHeaderProps) => {
   const getStatusColor = () => {
-    if (status === 'PROCESSING DATA' && messageIndex < 10) {
+    if (status === 'AWAITING INPUT') {
+      return 'bg-gray-500';
+    } else if (status === 'PROCESSING DATA' && messageIndex < 10) {
       return 'bg-yellow-500';
     } else if (status === 'PROCESSING DATA') {
       return 'bg-purple-500';

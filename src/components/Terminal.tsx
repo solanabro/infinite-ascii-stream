@@ -11,7 +11,7 @@ const Terminal = () => {
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
-  const [status, setStatus] = useState('PROCESSING DATA');
+  const [status, setStatus] = useState('AWAITING INPUT');
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('userEmail');
