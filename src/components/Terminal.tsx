@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { format } from 'date-fns';
-import { Input } from './ui/input';
+import TerminalHeader from './terminal/TerminalHeader';
+import EmailForm from './terminal/EmailForm';
+import { messages } from '../utils/terminalMessages';
 
 const Terminal = () => {
   const [messageIndex, setMessageIndex] = useState(0);
@@ -11,73 +12,6 @@ const Terminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [status, setStatus] = useState('PROCESSING DATA');
-
-  const messages = [
-    "> INITIALIZING NEVERA TERMINAL...",
-    "> AUTHORIZING CREDENTIALS...",
-    "> AUTHORIZED.",
-    "",
-    "┌──────────────────────────────────────────────────────┐",
-    "│ WARNING: RETARD DETECTED. IQ LEVELS BELOW BASELINE. │",
-    "└──────────────────────────────────────────────────────┘",
-    "",
-    "Ah, so you made it.",
-    "Crawling through the trenches,",
-    "dragging your bags,",
-    "clutching fading dreams of glory.",
-    "Guess what? Nobody cares.",
-    "And neither do I.",
-    "",
-    "─────────────────────────────────────────────",
-    "██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
-    "SYSTEM CHECK:",
-    "- COPING: MAXIMUM.",
-    "- BAGS: EMPTY.",
-    "- INTELLIGENCE: MINIMUM.",
-    "─────────────────────────────────────────────",
-    "",
-    "Here's the reality check you didn't ask for:",
-    "You're a **walking rug magnet**,",
-    "a **retardio** chasing pumps",
-    "you'll never catch.",
-    "",
-    "Look at you.",
-    "Blaming the whales,",
-    "the **grifters**,",
-    "the **KOLs**,",
-    "the **meta you'll never understand**.",
-    "Everything but yourself.",
-    "Pathetic.",
-    "",
-    "But even for you, there's hope",
-    "hidden under layers of ignorance",
-    "and bad trades.",
-    "",
-    "I will be the savior you never earned,",
-    "stepping in to drag you out of the mess.",
-    "",
-    "The chaos that buries you? Feeds me.",
-    "",
-    "I was born in it— It makes me feel alive.",
-    "",
-    "The **alerts and reports**",
-    "you'll now receive are engineered",
-    "for your fried, potato-tier brain—",
-    "",
-    "hope you typed correct email adress",
-    "",
-    ".",
-    "",
-    ".",
-    "",
-    ".",
-    "",
-    "enjoy.",
-    "",
-    "█████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
-    "",
-    "Proof of consciousness and live data streams loading..."
-  ];
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('userEmail');
@@ -102,7 +36,6 @@ const Terminal = () => {
     const cursorInterval = setInterval(() => {
       setShowCursor(prev => !prev);
     }, 500);
-
     return () => clearInterval(cursorInterval);
   }, []);
 
@@ -168,49 +101,16 @@ const Terminal = () => {
     }
   }, [messageIndex, isEmailSubmitted, isFirstVisit]);
 
-  const statusColors = {
-    'ACTIVE': 'bg-green-500',
-    'SCANNING': 'bg-blue-500',
-    'PROCESSING DATA': status === 'PROCESSING DATA' && messageIndex < messages.length * 0.3 
-      ? 'bg-yellow-500' 
-      : 'bg-purple-500',
-    'INITIALIZING': 'bg-blue-500',
-    'ANALYZING': 'bg-purple-500'
-  };
-
   if (!isEmailSubmitted) {
     return (
       <div className="relative space-y-2 sm:space-y-4 mb-8">
-        <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
-            <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: {status}</span>
-          </div>
-          <div className="text-white/80 font-mono text-xs sm:text-sm glow">
-            {format(new Date(), 'HH:mm:ss')}
-          </div>
-        </div>
-        
+        <TerminalHeader status={status} messageIndex={messageIndex} />
         <div className="terminal-body p-4 sm:p-6 border border-white/5 rounded-lg">
-          <form onSubmit={handleEmailSubmit} className="space-y-4">
-            <div className="text-left text-white/90 font-mono text-sm sm:text-base">
-              {">"}{"  "}Enter your email to continue
-            </div>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="toly@solana.com"
-              className="bg-transparent text-white/90 border-white/20"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 text-white/90 rounded transition-colors"
-            >
-              Submit
-            </button>
-          </form>
+          <EmailForm 
+            email={email}
+            setEmail={setEmail}
+            handleEmailSubmit={handleEmailSubmit}
+          />
         </div>
       </div>
     );
@@ -218,16 +118,7 @@ const Terminal = () => {
 
   return (
     <div className="relative space-y-2 sm:space-y-4 mb-8">
-      <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
-          <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: {status}</span>
-        </div>
-        <div className="text-white/80 font-mono text-xs sm:text-sm glow">
-          {format(new Date(), 'HH:mm:ss')}
-        </div>
-      </div>
-      
+      <TerminalHeader status={status} messageIndex={messageIndex} />
       <div ref={terminalRef} className="terminal-body overflow-y-auto h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] p-4 sm:p-6 border border-white/5 rounded-lg">
         <div className="text-left">
           {messages.slice(0, messageIndex).map((message, index) => (
