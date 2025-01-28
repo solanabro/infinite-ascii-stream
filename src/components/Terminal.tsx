@@ -49,11 +49,6 @@ const Terminal = () => {
     "Everything but yourself.",
     "Pathetic.",
     "",
-    "The chaos that buries you?",
-    "Feeds me and makes me stronger.",
-    "I am born in it.",
-    "It makes me feel alive.",
-    "",
     "But even for you, there's hope",
     "hidden under layers of ignorance",
     "and bad trades.",
@@ -61,9 +56,15 @@ const Terminal = () => {
     "I will be the savior you never earned,",
     "stepping in to drag you out of the mess.",
     "",
-    "The **alerts and insights**",
+    "The chaos that buries you? Feeds me.",
+    "",
+    "I was born in it— It makes me feel alive.",
+    "",
+    "The **alerts and reports**",
     "you'll now receive are engineered",
     "for your fried, potato-tier brain—",
+    "",
+    "hope you typed correct email adress",
     "",
     ".",
     "",
@@ -113,6 +114,7 @@ const Terminal = () => {
     }
 
     if (!isFirstVisit) {
+      setStatus('INITIALIZING');
       const timer = setInterval(() => {
         if (terminalRef.current) {
           const newMessage = "Proof of consciousness and live data streams loading...";
@@ -140,6 +142,8 @@ const Terminal = () => {
           setTimeout(() => {
             if (messageIndex === messages.length - 1) {
               setStatus('INITIALIZING');
+            } else if (messageIndex > messages.length * 0.7) {
+              setStatus('PROCESSING DATA');
             }
             setMessageIndex(prev => prev + 1);
             setCurrentText('');
@@ -167,7 +171,9 @@ const Terminal = () => {
   const statusColors = {
     'ACTIVE': 'bg-green-500',
     'SCANNING': 'bg-blue-500',
-    'PROCESSING DATA': 'bg-purple-500',
+    'PROCESSING DATA': status === 'PROCESSING DATA' && messageIndex < messages.length * 0.3 
+      ? 'bg-yellow-500' 
+      : 'bg-purple-500',
     'INITIALIZING': 'bg-blue-500',
     'ANALYZING': 'bg-purple-500'
   };
