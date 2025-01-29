@@ -7,16 +7,6 @@ interface EmailFormProps {
 }
 
 const EmailForm = ({ email, setEmail, handleEmailSubmit }: EmailFormProps) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Call the original handleEmailSubmit for local state management
-    handleEmailSubmit(e);
-    
-    // Then submit the form to Mailchimp
-    const form = e.target as HTMLFormElement;
-    form.submit();
-  };
-
   return (
     <form 
       action="https://fun.us8.list-manage.com/subscribe/post?u=a22fa715a847ef252086188bd&amp;id=5512337691&amp;f_id=0019c2e2f0" 
@@ -25,7 +15,7 @@ const EmailForm = ({ email, setEmail, handleEmailSubmit }: EmailFormProps) => {
       name="mc-embedded-subscribe-form" 
       className="space-y-4"
       target="_blank"
-      onSubmit={handleSubmit}
+      onSubmit={handleEmailSubmit}
     >
       <div className="text-left text-white/90 font-mono text-sm sm:text-base">
         {">"}{"  "}Enter your email to continue
